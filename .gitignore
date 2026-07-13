@@ -1,0 +1,9 @@
+# deps + build output
+node_modules/
+dist/
+*.local
+*.tsbuildinfo
+
+# source 3D models (35 MB) — only the optimized public/models/pack.bin ships
+models/*.glb
+models/*.stl
