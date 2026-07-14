@@ -21,34 +21,25 @@ export default function Hero() {
     <section className="hero" id="hero" ref={heroRef}>
       <canvas id="fx" aria-hidden="true" ref={canvasRef}></canvas>
       <div className="hero-copy">
-        <p className="eyebrow" ref={eyebrowRef}>// YSWS program by Hack Club</p>
         <h1 className="shout">
-          <span className="line line-ink">You ship.</span>
+          <span className="line line-ink">You hack.</span>
           <span className="line line-green">We ship.</span>
         </h1>
         <p className="hero-sub">
-          Build a security tool, or break into real code. Ship it — and Hack&nbsp;Club ships
-          you something that takes you deeper.
+          Do anything cybersec: build a tool, find vulns, reverse engineer malware. Write up your work, ship it, and get hacker gear.
         </p>
         <div className="hero-ctas">
           <a className="btn" href="https://hackclub.com/slack" target="_blank" rel="noreferrer">
-            <span className="btn-arrow">&gt;</span> Apply now
+            <span className="btn-arrow">&gt;</span> RSVP
           </a>
-          <span className="hero-hint" aria-hidden="true">[ click to surge ]</span>
         </div>
       </div>
 
       <div className="hero-foot">
         <a className="scroll-cue" href="#program">
-          <span className="cue-line"></span>
-          <span>Scroll down</span>
         </a>
         <div className="statline" aria-label="program status">
           <span>hw: <b id="hwname">loading&hellip;</b></span>
-          <span>status: <b>open</b></span>
-          <span>tracks: <b>02</b></span>
-          <span>age: <b>&le;18</b></span>
-          <span>missions: <b>&infin;</b></span>
           <span className="coords" id="coords" aria-hidden="true">x ---- / y ----</span>
         </div>
       </div>

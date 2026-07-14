@@ -7,3 +7,12 @@ dist/
 # source 3D models (35 MB) — only the optimized public/models/pack.bin ships
 models/*.glb
 models/*.stl
+
+# launch video (vid/) — renders, fetched/generated assets, staged audio
+vid/out/
+vid/assets/
+vid/public/assets/
+vid/public/audio/
+vid/public/fonts/
+vid/music/*.mp3
+vid/music/other/

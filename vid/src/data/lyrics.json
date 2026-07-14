@@ -1,0 +1,275 @@
+[
+ {
+  "time": 8.75,
+  "end": 12.19,
+  "gateStart": 8.57,
+  "text": "This one's dedicated to all the hackers",
+  "allowed": true
+ },
+ {
+  "time": 13.98,
+  "end": 15.87,
+  "gateStart": 13.8,
+  "text": "Even out settle scores quick",
+  "allowed": false
+ },
+ {
+  "time": 15.87,
+  "end": 19.06,
+  "gateStart": 15.69,
+  "text": "Our disaster recovery requires even more disks",
+  "allowed": false
+ },
+ {
+  "time": 19.06,
+  "end": 21.27,
+  "gateStart": 18.88,
+  "text": "Put your bytes up, prove it or you forfeit",
+  "allowed": true
+ },
+ {
+  "time": 21.27,
+  "end": 24.16,
+  "gateStart": 21.09,
+  "text": "Got my C64 and we blew it into orbit",
+  "allowed": false
+ },
+ {
+  "time": 24.16,
+  "end": 26.32,
+  "gateStart": 23.98,
+  "text": "M. Bison with eight straight perfects",
+  "allowed": false
+ },
+ {
+  "time": 26.32,
+  "end": 28.91,
+  "gateStart": 26.14,
+  "text": "Overvolt emotions make hate break circuits",
+  "allowed": false
+ },
+ {
+  "time": 28.91,
+  "end": 31.55,
+  "gateStart": 28.73,
+  "text": "In case you heard, it's a named fake service",
+  "allowed": false
+ },
+ {
+  "time": 31.55,
+  "end": 33.84,
+  "gateStart": 31.37,
+  "text": "Optimize our runtime to escape verdicts",
+  "allowed": false
+ },
+ {
+  "time": 33.84,
+  "end": 35.49,
+  "gateStart": 33.66,
+  "text": "Got an integer scope flow",
+  "allowed": false
+ },
+ {
+  "time": 35.49,
+  "end": 36.26,
+  "gateStart": 35.31,
+  "text": "That they can't sign",
+  "allowed": false
+ },
+ {
+  "time": 36.26,
+  "end": 37.69,
+  "gateStart": 36.08,
+  "text": "Passing code, didn't sanitize",
+  "allowed": true
+ },
+ {
+  "time": 37.69,
+  "end": 39.43,
+  "gateStart": 37.51,
+  "text": "Command lines; land mine",
+  "allowed": true
+ },
+ {
+  "time": 39.43,
+  "end": 41.58,
+  "gateStart": 39.25,
+  "text": "So before, they'll see me after",
+  "allowed": false
+ },
+ {
+  "time": 41.58,
+  "end": 42.13,
+  "gateStart": 41.4,
+  "text": "I'm Advice dog",
+  "allowed": false
+ },
+ {
+  "time": 42.13,
+  "end": 42.98,
+  "gateStart": 41.95,
+  "text": "Courage Wolf",
+  "allowed": false
+ },
+ {
+  "time": 42.98,
+  "end": 44.15,
+  "gateStart": 42.8,
+  "text": "Plus Philosoraptor",
+  "allowed": false
+ },
+ {
+  "time": 44.15,
+  "end": 46.73,
+  "gateStart": 43.97,
+  "text": "Don't prove we're human unless we really hafta",
+  "allowed": true
+ },
+ {
+  "time": 46.73,
+  "end": 49.27,
+  "gateStart": 46.55,
+  "text": "My team built schemes that destroyed recaptcha",
+  "allowed": true
+ },
+ {
+  "time": 49.27,
+  "end": 51.67,
+  "gateStart": 49.09,
+  "text": "Hate what they see, finish this chapter",
+  "allowed": false
+ },
+ {
+  "time": 51.67,
+  "end": 54.25,
+  "gateStart": 51.49,
+  "text": "By the way we're not any geeks, we hack into NASA",
+  "allowed": false
+ },
+ {
+  "time": 54.25,
+  "end": 55.56,
+  "gateStart": 54.07,
+  "text": "Drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 55.56,
+  "end": 56.86,
+  "gateStart": 55.38,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 56.86,
+  "end": 57.95,
+  "gateStart": 56.68,
+  "text": "Drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 57.95,
+  "end": 59.36,
+  "gateStart": 57.77,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 59.36,
+  "end": 60.62,
+  "gateStart": 59.18,
+  "text": "Drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 60.62,
+  "end": 61.69,
+  "gateStart": 60.44,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 61.69,
+  "end": 62.83,
+  "gateStart": 61.51,
+  "text": "Got this Vodka and this Redbull",
+  "allowed": false
+ },
+ {
+  "time": 62.83,
+  "end": 64.15,
+  "gateStart": 62.65,
+  "text": "They still give me wings",
+  "allowed": false
+ },
+ {
+  "time": 64.15,
+  "end": 65.55,
+  "gateStart": 63.97,
+  "text": "So we drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 65.55,
+  "end": 66.89,
+  "gateStart": 65.37,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 66.89,
+  "end": 68.23,
+  "gateStart": 66.71,
+  "text": "Drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 68.23,
+  "end": 69.52,
+  "gateStart": 68.05,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 69.52,
+  "end": 70.75,
+  "gateStart": 69.34,
+  "text": "Drink all the booze",
+  "allowed": false
+ },
+ {
+  "time": 70.75,
+  "end": 71.6,
+  "gateStart": 70.57,
+  "text": "Hack all the things",
+  "allowed": true
+ },
+ {
+  "time": 71.6,
+  "end": 72.88,
+  "gateStart": 71.42,
+  "text": "Zero through Three",
+  "allowed": true
+ },
+ {
+  "time": 72.88,
+  "end": 74.48,
+  "gateStart": 72.7,
+  "text": "We're in every single ring",
+  "allowed": true
+ },
+ {
+  "time": 74.48,
+  "end": 76.82,
+  "gateStart": 74.3,
+  "text": "I'm just waiting 'til my Blackberry dies",
+  "allowed": false
+ },
+ {
+  "time": 76.82,
+  "end": 79.0,
+  "gateStart": 76.64,
+  "text": "Cause I'll replace it with a Raspberry Pi",
+  "allowed": false
+ }
+]

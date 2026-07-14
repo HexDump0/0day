@@ -1,0 +1,45 @@
+{
+ "stardance": {
+  "file": "stardance.png",
+  "width": 900,
+  "height": 472
+ },
+ "macondo": {
+  "file": "macondo.png",
+  "width": 900,
+  "height": 472
+ },
+ "forge": {
+  "file": "forge.png",
+  "width": 900,
+  "height": 674
+ },
+ "game": {
+  "file": "game.png",
+  "width": 900,
+  "height": 506
+ },
+ "shipyard": {
+  "file": "shipyard.svg",
+  "svg": true
+ },
+ "horizons": {
+  "file": "horizons.png",
+  "width": 900,
+  "height": 562
+ },
+ "blueprint": {
+  "file": "blueprint.png",
+  "width": 900,
+  "height": 300
+ },
+ "anvil": {
+  "file": "anvil.png",
+  "width": 900,
+  "height": 472
+ },
+ "hackclub-flag": {
+  "file": "hackclub-flag.svg",
+  "svg": true
+ }
+}

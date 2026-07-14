@@ -9,7 +9,7 @@ export default function Header() {
           <a key={link.href} href={link.href}>{link.label}</a>
         ))}
       </nav>
-      <a className="apply" href={APPLY_URL} target="_blank" rel="noreferrer">Apply now</a>
+      <a className="apply" href={APPLY_URL} target="_blank" rel="noreferrer">RSVP</a>
     </header>
   );
 }

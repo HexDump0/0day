@@ -101,7 +101,7 @@
   .top {
     display: flex;
     align-items: center;
-    gap: clamp(16px, 4vw, 56px);
+    gap: clamp(16px, 3vw, 28px);
     padding: 18px var(--pad);
     border-bottom: 1px solid var(--hair);
     position: sticky;
@@ -138,12 +138,11 @@
     text-decoration: none;
     background: var(--acid);
     color: #111;
-    padding: 9px 16px;
     border: 1px solid var(--acid);
-    box-shadow: 3px 3px 0 var(--fg);
-    transition: box-shadow .12s, translate .12s;
+    padding: 9px 18px;
+    transition: background .15s, border-color .15s;
   }
-  .apply:hover { translate: 1px 1px; box-shadow: 1px 1px 0 var(--fg); }
+  .apply:hover { background: var(--fg); border-color: var(--fg); }
 
   /* ---- hero ---- */
   .hero {
@@ -154,7 +153,6 @@
     justify-content: center;
     padding: clamp(24px, 4vh, 48px) var(--pad) 96px;
     overflow: clip;
-    cursor: crosshair;
   }
 
   #fx {
@@ -207,12 +205,12 @@
 
   .btn {
     display: inline-block;
-    font-size: 13px;
+    font-size: 15px;
     letter-spacing: .07em;
     text-transform: uppercase;
     text-decoration: none;
     border: 1px solid var(--fg);
-    padding: 15px 30px;
+    padding: 11px 22px;
     background: color-mix(in srgb, var(--bg) 70%, transparent);
     transition: background .15s, color .15s, border-color .15s;
   }

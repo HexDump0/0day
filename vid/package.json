@@ -1,0 +1,22 @@
+{
+  "name": "0day-launch-video",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render ZeroDayLaunch out/0day-launch.mp4",
+    "still": "remotion still ZeroDayLaunch"
+  },
+  "dependencies": {
+    "@remotion/fonts": "^4.0.410",
+    "@remotion/media-utils": "^4.0.410",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "remotion": "^4.0.410"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.410",
+    "@types/react": "^19.2.0",
+    "typescript": "^5.9.0"
+  }
+}
