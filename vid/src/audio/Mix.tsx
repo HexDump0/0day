@@ -3,8 +3,10 @@
    Instrumental: runs continuously, ducks -4dB under big claim cards, dies
    completely in the gap (tape-stop covers the kill), fades out at the end.
 
-   Vocals: hard-gated — only whitelisted LRC lines pass (chorus booze lines
-   and the NASA bar never reach the master). 80ms cosine ramps, no clicks.
+   Vocals: gated by the LRC whitelist (booze lines and the NASA bar never
+   reach the master). The verse runs uncut; around the "you ship, we ship"
+   explainer a slow envelope breathes the stem out after the dedication and
+   back in as Stardance lands. 80ms cosine ramps on the hard gates.
 
    SFX: tape stop, sub hit on the "0", riser into the drop, whooshes/ticks
    are triggered by the scenes' cut lists. */
@@ -54,13 +56,38 @@ const instrumentalVolume = (f: number): number => {
   return duckGain(t) * masterFade(t);
 };
 
+/* slow breath around the explainer: vocals duck (not mute) after the
+   dedication tail, back to full right as the first YSWS card (Stardance)
+   hits at beat DROP_BEAT-56 */
+const T_VOX_OUT = 11.8;
+const T_VOX_OUT_END = 14.2;
+const T_VOX_IN = beatTime(DROP_BEAT - 56) - 1.2;
+const T_VOX_IN_END = beatTime(DROP_BEAT - 56) + 0.2;
+const VOX_DUCK = 0.5;
+
+const verseEnvelope = (t: number): number => {
+  if (t < T_VOX_OUT || t >= T_VOX_IN_END) return 1;
+  const span = 1 - VOX_DUCK;
+  if (t < T_VOX_OUT_END) {
+    const p = (t - T_VOX_OUT) / (T_VOX_OUT_END - T_VOX_OUT);
+    return VOX_DUCK + span * 0.5 * (1 + Math.cos(p * Math.PI));
+  }
+  if (t < T_VOX_IN) return VOX_DUCK;
+  const p = (t - T_VOX_IN) / (T_VOX_IN_END - T_VOX_IN);
+  return VOX_DUCK + span * 0.5 * (1 - Math.cos(p * Math.PI));
+};
+
 const vocalsVolume = (f: number): number => {
   const t = f / FPS;
+  // the gap is dead air — no vocal tail may survive the tape-stop
+  if (t >= T_TAPE_STOP && t < T_DROP) {
+    return t < T_TAPE_STOP + 0.12 ? 1 - (t - T_TAPE_STOP) / 0.12 : 0;
+  }
   let g = 0;
   for (const l of ALLOWED_LINES) {
     g = Math.max(g, gateGain(t, l.gateStart, l.end));
   }
-  return g * masterFade(t);
+  return g * verseEnvelope(t) * masterFade(t);
 };
 
 const sfx = (file: string, at: number, volume = 1): React.ReactNode => (

@@ -3,8 +3,8 @@
    chromatic burst. Nothing else gets invented in scene files. */
 import React from 'react';
 import {AbsoluteFill, interpolate, random, useCurrentFrame} from 'remotion';
-import {ACID, FG, HAIR, MONO} from '../theme';
-import {impulse} from '../lib/timeline';
+import {ACID, FG, HAIR, INK, MONO} from '../theme';
+import {FPS, impulse} from '../lib/timeline';
 
 /* ---- global texture: scanlines + vignette + drifting grain ---- */
 export const Chrome: React.FC<{opacity?: number}> = ({opacity = 1}) => {
@@ -80,6 +80,67 @@ export const Typewriter: React.FC<{
       {cursor && (
         <span style={{color: ACID, opacity: p >= 1 ? (blink ? 1 : 0) : 1}}>▮</span>
       )}
+    </span>
+  );
+};
+
+/* ---- the Typer: characters ripple through block states, then settle ----
+   Port of arlan.me/vault/typer (MIT), made deterministic for Remotion.
+   Words carry absolute timeline seconds, so text can sync to speech
+   (whisper onsets) or to the beat grid with the same component. */
+const TYPER_STATES = ['fill', 'inverse', 'outline'] as const;
+
+const typerCharStyle = (
+  state: (typeof TYPER_STATES)[number] | 'plain',
+): React.CSSProperties => {
+  switch (state) {
+    case 'fill':
+      return {background: ACID, color: 'transparent', borderRadius: 3};
+    case 'inverse':
+      return {background: FG, color: INK, borderRadius: 3};
+    case 'outline':
+      return {boxShadow: `inset 0 0 0 1.5px ${HAIR}`, color: 'transparent', borderRadius: 3};
+    default:
+      return {};
+  }
+};
+
+export const Typer: React.FC<{
+  words: {time: number; text: string}[];
+  cycleFrames?: number; // how long each char rolls before settling
+  style?: React.CSSProperties;
+}> = ({words, cycleFrames = 9, style}) => {
+  const frame = useCurrentFrame();
+  return (
+    <span style={{fontFamily: MONO, color: FG, whiteSpace: 'pre-wrap', ...style}}>
+      {words.map((w, wi) => (
+        <span key={wi} style={{display: 'inline-block', whiteSpace: 'pre'}}>
+          {[...w.text, ...(wi < words.length - 1 ? [' '] : [])].map((ch, ci) => {
+            const reveal = Math.round(w.time * FPS) + ci; // 1-frame char stagger
+            if (frame < reveal || ch === ' ') {
+              return (
+                <span key={ci} style={{visibility: frame < reveal ? 'hidden' : undefined}}>
+                  {ch}
+                </span>
+              );
+            }
+            const age = frame - reveal;
+            const state =
+              age >= cycleFrames
+                ? 'plain'
+                : TYPER_STATES[
+                    (Math.floor(age / 3) +
+                      Math.floor(random(`typer-${wi}-${ci}`) * 3)) %
+                      TYPER_STATES.length
+                  ];
+            return (
+              <span key={ci} style={typerCharStyle(state)}>
+                {ch}
+              </span>
+            );
+          })}
+        </span>
+      ))}
     </span>
   );
 };

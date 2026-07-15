@@ -2,6 +2,59 @@
    places ticks/whooshes from them too — one schedule, two consumers. */
 import {beatTime, CHORUS_HITS, DROP_BEAT, T_DROP} from './timeline';
 import assets from '../data/ysws-assets.json';
+import footage from '../data/footage.json';
+
+/* ---- cold open: the Hackers (1995) sample, word-timed via whisper ---- */
+export interface TimedWord {
+  time: number;
+  text: string;
+}
+export const INTRO_WORDS: TimedWord[] = [
+  {time: 0.66, text: 'not'},
+  {time: 0.82, text: 'every'},
+  {time: 1.04, text: 'geek'},
+  {time: 1.28, text: 'with'},
+  {time: 1.48, text: 'a'},
+  {time: 1.56, text: 'commodore'},
+  {time: 1.84, text: '64'},
+  {time: 2.36, text: 'can'},
+  {time: 2.6, text: 'hack'},
+  {time: 2.72, text: 'into'},
+  {time: 3.0, text: 'NASA'},
+];
+export const DEDICATION_WORDS: TimedWord[] = [
+  {time: 8.72, text: 'this'},
+  {time: 9.08, text: "one's"},
+  {time: 9.5, text: 'dedicated'},
+  {time: 9.94, text: 'to'},
+  {time: 10.24, text: 'all'},
+  {time: 10.46, text: 'the'},
+  {time: 10.66, text: 'hackers'},
+];
+
+/* archival shots: word-synced during the quote, grid-locked after the beat
+   drops in at beat 5. startFrom skips into the pre-cut clip (seconds). */
+export interface Shot {
+  time: number;
+  clip: keyof typeof footage;
+  slate: string;      // real provenance, shown dim in the corner
+  note?: string;      // deadpan annotation, lower third
+  startFrom?: number;
+}
+export const INTRO_SHOTS: Shot[] = [
+  {time: 1.56, clip: 'c64_title', slate: 'commodore, 1982'},
+  {time: 2.36, clip: 'c64_typing', slate: 'commodore, 1982'},
+  {time: 3.0, clip: 'saturn_ignition', slate: 'nasa, 16mm', startFrom: 2.0},
+  {time: beatTime(5), clip: 'saturn_climb', slate: 'nasa, 16mm',
+    note: '1969: the moon, on 4kb of ram'},
+  {time: beatTime(7), clip: 'c64_word', slate: 'commodore, 1982',
+    note: "1982: 64kb, on a kid's desk"},
+  {time: beatTime(9), clip: 'ibm_tapes', slate: 'irs, 1966',
+    note: 'every generation hacked anyway'},
+  {time: beatTime(11), clip: 'earth', slate: 'nasa, 16mm'},
+];
+export const T_INTRO_SHOTS_END = 8.75; // dedication card takes over
+export const FOOTAGE = footage as Record<string, {file: string; duration: number}>;
 
 export interface Card {
   time: number;
@@ -77,6 +130,10 @@ export const DROP_SCHEDULE: Claim[] = [
 
 /* audio cue list for the Mix component */
 export const AUDIO_CUTS: {time: number; sound: string; vol?: number}[] = [
+  // intro: soft ticks on the grid-locked archival cuts (not the word-synced ones)
+  ...INTRO_SHOTS.filter((s) => s.time > 3.7).map((s, i) => ({
+    time: s.time, sound: `tick${(i % 3) + 1}.wav`, vol: 0.2,
+  })),
   ...FLAGSHIP_CARDS.map((c, i) => ({
     time: c.time, sound: `tick${(i % 3) + 1}.wav`, vol: 0.3,
   })),

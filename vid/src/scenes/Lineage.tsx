@@ -3,8 +3,8 @@
    walks straight into the tape-stop. Hard cuts only, all on the grid. */
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame} from 'remotion';
-import {ACID, BG, DIM, DOTO_HEAVY, FG, HAIR, INK, MONO} from '../theme';
-import {ALLOWED_LINES, beatTime, DROP_BEAT, PERIOD, sec, T_TAPE_STOP} from '../lib/timeline';
+import {ACID, BG, DIM, DOTO_HEAVY, FG, HAIR, MONO} from '../theme';
+import {beatTime, DROP_BEAT, PERIOD, sec} from '../lib/timeline';
 import {
   FLAGSHIP_CARDS, RAPID_CARDS, T_STAT_COUNT, T_STAT_KINDS, T_STAT_QUESTION,
   YSWS_ASSETS,
@@ -39,26 +39,6 @@ const Counter: React.FC<{t: number}> = ({t}) => {
   );
 };
 
-/* lower-third caption for the whitelisted verse vocals — the on-screen text
-   and the audible words are the same data */
-const Caption: React.FC<{t: number}> = ({t}) => {
-  const line = ALLOWED_LINES.find(
-    (l) => t >= l.time && t < l.end && l.time > 15 && l.time < 50,
-  );
-  if (!line) return null;
-  return (
-    <div
-      style={{
-        position: 'absolute', bottom: 64, left: 80, fontFamily: MONO,
-        fontSize: 30, color: FG,
-      }}
-    >
-      <span style={{color: ACID}}>&gt; </span>
-      {line.text.toLowerCase()}
-    </div>
-  );
-};
-
 const Intro: React.FC<{t: number}> = ({t}) => {
   const b = (k: number) => t >= beatTime(DROP_BEAT + k);
   return (
@@ -88,7 +68,10 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
   const card = FLAGSHIP_CARDS[idx];
   const asset = YSWS_ASSETS[card.slug];
   const local = t - card.time;
-  const pan = 1.04 + local * 0.012; // slow per-card push-in
+  // alternate push-in / pull-out and label side so the wall doesn't loop
+  const pushIn = idx % 2 === 0;
+  const pan = pushIn ? 1.04 + local * 0.012 : 1.06 - local * 0.012;
+  const labelLeft = idx % 2 === 0;
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -111,7 +94,12 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
           />
         </div>
       </AbsoluteFill>
-      <div style={{position: 'absolute', left: 80, bottom: 140}}>
+      <div
+        style={{
+          position: 'absolute', bottom: 140,
+          ...(labelLeft ? {left: 80} : {right: 80, textAlign: 'right' as const}),
+        }}
+      >
         <div style={{...DOTO_HEAVY, fontSize: 96, color: FG}}>
           {card.name.toUpperCase()}
         </div>
@@ -134,26 +122,15 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
 const Rapid: React.FC<{t: number}> = ({t}) => {
   const idx = RAPID_CARDS.findLastIndex((c) => t >= c.time);
   const card = RAPID_CARDS[idx];
-  const invert = idx % 4 === 3;
   return (
-    <AbsoluteFill
-      style={{
-        background: invert ? ACID : BG,
-        justifyContent: 'center', alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          ...DOTO_HEAVY, fontSize: 200,
-          color: invert ? INK : FG, textAlign: 'center',
-        }}
-      >
+    <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+      <div style={{...DOTO_HEAVY, fontSize: 200, color: FG, textAlign: 'center'}}>
         {card.name.toUpperCase()}
       </div>
       <div
         style={{
-          position: 'absolute', bottom: 64, fontFamily: MONO, fontSize: 28,
-          color: invert ? INK : DIM,
+          position: 'absolute', bottom: 64, right: 80, fontFamily: MONO,
+          fontSize: 28, color: DIM,
         }}
       >
         and dozens more
@@ -208,7 +185,6 @@ export const Lineage: React.FC = () => {
         {view}
       </Punch>
       {t < T_STAT_COUNT && <Counter t={t} />}
-      <Caption t={t} />
     </AbsoluteFill>
   );
 };

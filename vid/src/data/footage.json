@@ -1,0 +1,46 @@
+{
+ "c64_typing": {
+  "file": "c64_typing.mp4",
+  "duration": 3.52
+ },
+ "c64_title": {
+  "file": "c64_title.mp4",
+  "duration": 1.6
+ },
+ "c64_word": {
+  "file": "c64_word.mp4",
+  "duration": 1.6
+ },
+ "ibm_tapes": {
+  "file": "ibm_tapes.mp4",
+  "duration": 6.006
+ },
+ "ibm_room": {
+  "file": "ibm_room.mp4",
+  "duration": 5.005
+ },
+ "saturn_pad": {
+  "file": "saturn_pad.mp4",
+  "duration": 6.006
+ },
+ "saturn_ignition": {
+  "file": "saturn_ignition.mp4",
+  "duration": 6.006
+ },
+ "saturn_climb": {
+  "file": "saturn_climb.mp4",
+  "duration": 6.006
+ },
+ "earth": {
+  "file": "earth.mp4",
+  "duration": 4.505
+ },
+ "cockpit": {
+  "file": "cockpit.mp4",
+  "duration": 5.005
+ },
+ "llrf": {
+  "file": "llrf.mp4",
+  "duration": 5.005
+ }
+}

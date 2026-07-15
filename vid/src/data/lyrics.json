@@ -1,7 +1,14 @@
 [
  {
+  "time": 0.66,
+  "end": 4.81,
+  "gateStart": 0.48,
+  "text": "Not every geek with a Commodore 64 can hack into NASA",
+  "allowed": true
+ },
+ {
   "time": 8.75,
-  "end": 12.19,
+  "end": 13.6,
   "gateStart": 8.57,
   "text": "This one's dedicated to all the hackers",
   "allowed": true
@@ -11,14 +18,14 @@
   "end": 15.87,
   "gateStart": 13.8,
   "text": "Even out settle scores quick",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 15.87,
   "end": 19.06,
   "gateStart": 15.69,
   "text": "Our disaster recovery requires even more disks",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 19.06,
@@ -32,49 +39,49 @@
   "end": 24.16,
   "gateStart": 21.09,
   "text": "Got my C64 and we blew it into orbit",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 24.16,
   "end": 26.32,
   "gateStart": 23.98,
   "text": "M. Bison with eight straight perfects",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 26.32,
   "end": 28.91,
   "gateStart": 26.14,
   "text": "Overvolt emotions make hate break circuits",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 28.91,
   "end": 31.55,
   "gateStart": 28.73,
   "text": "In case you heard, it's a named fake service",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 31.55,
   "end": 33.84,
   "gateStart": 31.37,
   "text": "Optimize our runtime to escape verdicts",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 33.84,
   "end": 35.49,
   "gateStart": 33.66,
   "text": "Got an integer scope flow",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 35.49,
   "end": 36.26,
   "gateStart": 35.31,
   "text": "That they can't sign",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 36.26,
@@ -95,28 +102,28 @@
   "end": 41.58,
   "gateStart": 39.25,
   "text": "So before, they'll see me after",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 41.58,
   "end": 42.13,
   "gateStart": 41.4,
   "text": "I'm Advice dog",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 42.13,
   "end": 42.98,
   "gateStart": 41.95,
   "text": "Courage Wolf",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 42.98,
   "end": 44.15,
   "gateStart": 42.8,
   "text": "Plus Philosoraptor",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 44.15,
