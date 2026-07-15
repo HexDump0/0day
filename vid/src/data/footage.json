@@ -42,5 +42,33 @@
  "llrf": {
   "file": "llrf.mp4",
   "duration": 5.005
+ },
+ "keys_macro": {
+  "file": "keys_macro.mp4",
+  "duration": 2.0
+ },
+ "imp_panel": {
+  "file": "imp_panel.mp4",
+  "duration": 2.08
+ },
+ "crt_room": {
+  "file": "crt_room.mp4",
+  "duration": 2.6
+ },
+ "arpanet_net": {
+  "file": "arpanet_net.mp4",
+  "duration": 6.0
+ },
+ "sage_scope": {
+  "file": "sage_scope.mp4",
+  "duration": 5.005
+ },
+ "sage_lightgun": {
+  "file": "sage_lightgun.mp4",
+  "duration": 5.005
+ },
+ "sage_board": {
+  "file": "sage_board.mp4",
+  "duration": 4.004
  }
 }

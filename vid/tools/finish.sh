@@ -7,7 +7,8 @@ cd "$(dirname "$0")/.."
 IN=out/0day-launch.mp4
 OUT=out/0day-launch-final.mp4
 
-STATS=$(ffmpeg -i "$IN" -af loudnorm=I=-14:TP=-1.2:LRA=11:print_format=json -f null - 2>&1 | tail -12)
+# no tail: newer ffmpeg appends summary lines after the JSON block
+STATS=$(ffmpeg -i "$IN" -af loudnorm=I=-14:TP=-1.2:LRA=11:print_format=json -f null - 2>&1)
 I=$(echo "$STATS" | grep input_i | grep -oE '[-0-9.]+')
 TP=$(echo "$STATS" | grep input_tp | grep -oE '[-0-9.]+')
 LRA=$(echo "$STATS" | grep input_lra | grep -oE '[-0-9.]+' | head -1)
