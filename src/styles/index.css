@@ -652,30 +652,6 @@
     color: var(--body);
   }
 
-  .fact-rail {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin-top: clamp(40px, 6vh, 68px);
-    border-block: 1px solid var(--hair);
-  }
-
-  .fact-rail div {
-    padding: 20px clamp(14px, 2.5vw, 34px);
-  }
-
-  .fact-rail div:first-child { padding-left: 0; }
-  .fact-rail div + div { border-left: 1px solid var(--hair); }
-  .fact-rail dt {
-    color: var(--dim);
-    font-size: 10.5px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-  .fact-rail dd {
-    margin-top: 5px;
-    font: 500 clamp(16px, 1.6vw, 22px)/1.3 "Grotesk", system-ui, sans-serif;
-  }
-
   .brief-directions {
     margin-top: clamp(68px, 10vh, 112px);
   }
@@ -1727,15 +1703,6 @@
     .brief-close {
       font-size: clamp(27px, 8.7vw, 39px);
     }
-
-    .fact-rail {
-      grid-template-columns: repeat(2, 1fr);
-      margin-top: 42px;
-    }
-    .fact-rail div { padding: 16px 12px; }
-    .fact-rail div:nth-child(3) { border-left: 0; border-top: 1px solid var(--hair); }
-    .fact-rail div:nth-child(4) { border-top: 1px solid var(--hair); }
-    .fact-rail div:first-child { padding-left: 12px; }
 
     .brief-directions { margin-top: 58px; }
 

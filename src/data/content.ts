@@ -27,18 +27,6 @@ export const TICKER =
   '0 DAYS OF EXPERIENCE REQUIRED // ' +
   'DISCLOSE RESPONSIBLY // ';
 
-export interface ProgramFact {
-  label: string;
-  value: string;
-}
-
-export const PROGRAM_FACTS: ProgramFact[] = [
-  { label: 'format', value: 'You Ship, We Ship' },
-  { label: 'eligibility', value: '18 & under' },
-  { label: 'reach', value: 'worldwide' },
-  { label: 'cost', value: 'free' },
-];
-
 export interface Direction {
   id: 'build' | 'break' | 'reverse';
   no: string;
