@@ -9,13 +9,20 @@
    lands just after the Stardance card because that's where it sits in the
    song. Each kept line uses cosine ramps.
 
+   The gap hides a jump: the files are untouched, but the montage doesn't
+   need the whole verse. Element A plays song==video time and dies at the
+   tape-stop (mid-line by design). Element B starts underneath the silent
+   gap with trimBefore offset GAP_SKIP — muted while it primes, gated open
+   from the drop — so the chorus lands on the video's drop beat and the
+   splice lives entirely inside silence.
+
    SFX: tape stop, sub hit on the "0", riser into the drop, whooshes/ticks
    are triggered by the scenes' cut lists. */
 import React from 'react';
 import {Audio} from '@remotion/media';
 import {Sequence, staticFile, interpolate} from 'remotion';
 import {
-  ALLOWED_LINES, beatTime, DROP_BEAT, FPS, sec, T_DEDICATION,
+  ALLOWED_LINES, beatTime, DROP_BEAT, FPS, GAP_SKIP, sec, T_DEDICATION,
   T_FLAGSHIP_START, T_TAPE_STOP, T_VOX_RESUME, T_ZERO, T_DROP, T_END,
 } from '../lib/timeline';
 
@@ -49,12 +56,23 @@ const masterFade = (t: number): number =>
     extrapolateRight: 'clamp',
   });
 
+/* element A (song==video): everything up to the tape-stop, then silence —
+   a fast 30ms handoff to tape_brake.wav, which continues the same audio
+   at falling speed (real varispeed of the mix, rendered offline) */
+const HANDOFF_S = 0.03;
 const instrumentalVolume = (f: number): number => {
   const t = f / FPS;
-  // the gap: kill from tape-stop until the drop (tape_stop.wav covers the kill)
-  if (t >= T_TAPE_STOP && t < T_DROP) {
-    return t < T_TAPE_STOP + 0.12 ? 1 - (t - T_TAPE_STOP) / 0.12 : 0;
+  if (t >= T_TAPE_STOP) {
+    return t < T_TAPE_STOP + HANDOFF_S ? 1 - (t - T_TAPE_STOP) / HANDOFF_S : 0;
   }
+  return duckGain(t) * masterFade(t);
+};
+
+/* element B (video time, file offset by GAP_SKIP): silent through the gap
+   while the stream primes, open from the drop */
+const instrumentalVolumeB = (f: number): number => {
+  const t = T_TAPE_STOP + f / FPS; // sequence-local frames → video time
+  if (t < T_DROP) return 0;
   return duckGain(t) * masterFade(t);
 };
 
@@ -75,7 +93,7 @@ const setupVocalGain = (t: number): number => {
   if (t < T_VOX_RESUME - 0.2) return 1; // dedication stays full
   return interpolate(
     t,
-    [beatTime(DROP_BEAT - 58), T_FLAGSHIP_START],
+    [beatTime(DROP_BEAT - 44), T_FLAGSHIP_START],
     [VOX_SETUP_GAIN, 1],
     {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
   );
@@ -83,15 +101,26 @@ const setupVocalGain = (t: number): number => {
 
 const vocalsVolume = (f: number): number => {
   const t = f / FPS;
-  // the gap is dead air — no vocal tail may survive the tape-stop
-  if (t >= T_TAPE_STOP && t < T_DROP) {
-    return t < T_TAPE_STOP + 0.12 ? 1 - (t - T_TAPE_STOP) / 0.12 : 0;
+  // dead from the tape-stop — the brake carries the slowing vocal instead
+  if (t >= T_TAPE_STOP) {
+    return t < T_TAPE_STOP + HANDOFF_S ? 1 - (t - T_TAPE_STOP) / HANDOFF_S : 0;
   }
   let g = 0;
   for (const l of VOCAL_LINES) {
     g = Math.max(g, gateGain(t, l.gateStart, l.end));
   }
   return g * setupVocalGain(t) * masterFade(t);
+};
+
+const vocalsVolumeB = (f: number): number => {
+  const t = T_TAPE_STOP + f / FPS; // video time
+  if (t < T_DROP) return 0;
+  const song = t + GAP_SKIP; // lyric gates live in song time
+  let g = 0;
+  for (const l of VOCAL_LINES) {
+    g = Math.max(g, gateGain(song, l.gateStart, l.end));
+  }
+  return g * masterFade(t);
 };
 
 const sfx = (file: string, at: number, volume = 1): React.ReactNode => (
@@ -110,7 +139,23 @@ export const Mix: React.FC<{cuts?: {time: number; sound: string; vol?: number}[]
         volume={instrumentalVolume}
       />
       <Audio src={staticFile('audio/vocals.mp3')} volume={vocalsVolume} />
-      {sfx('tape_stop.wav', T_TAPE_STOP, 0.9)}
+      {/* trimmed mp3 playback lands ~68ms late (seek/priming) — measured by
+          cross-correlating the render against the stem; trim that much
+          further in so the chorus hits the drop beat exactly */}
+      <Sequence from={sec(T_TAPE_STOP)}>
+        <Audio
+          src={staticFile('audio/instrumental.mp3')}
+          trimBefore={sec(T_TAPE_STOP + GAP_SKIP + 0.068)}
+          volume={instrumentalVolumeB}
+        />
+        <Audio
+          src={staticFile('audio/vocals.mp3')}
+          trimBefore={sec(T_TAPE_STOP + GAP_SKIP + 0.068)}
+          volume={vocalsVolumeB}
+        />
+      </Sequence>
+      {sfx('tape_brake.wav', T_TAPE_STOP, 1)}
+      {sfx('tape_stop.wav', T_TAPE_STOP, 0.6)}
       {sfx('sub_hit.wav', T_ZERO, 1)}
       {sfx('riser.wav', T_DROP - 2.55, 0.75)}
       {cuts.map((c) => sfx(c.sound, c.time, c.vol ?? 0.4))}

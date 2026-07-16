@@ -9,21 +9,34 @@ import {
   FLAGSHIP_CARDS, RAPID_CARDS, T_STAT_COUNT, T_STAT_KINDS, T_STAT_QUESTION,
   YSWS_ASSETS,
 } from '../lib/cuts';
-import {Punch, Typewriter} from '../components/fx';
+import {Punch, PunchHit, Typewriter} from '../components/fx';
 
-const CUT_TIMES = [
-  ...FLAGSHIP_CARDS.map((c) => c.time),
-  ...RAPID_CARDS.map((c) => c.time),
-  T_STAT_COUNT, T_STAT_KINDS, T_STAT_QUESTION,
+/* punch weight follows the gear: full on readable cuts, lighter as the wall
+   speeds up — the biggest hit is saved for 170+ */
+const RAPID_PUNCH = [0.045, 0.038, 0.022];
+const PUNCH_HITS: PunchHit[] = [
+  ...FLAGSHIP_CARDS.map((c) => ({time: c.time, amount: 0.045})),
+  ...RAPID_CARDS.map((c) => ({time: c.time, amount: RAPID_PUNCH[c.gear]})),
+  {time: T_STAT_COUNT, amount: 0.08},
+  {time: T_STAT_KINDS, amount: 0.045},
+  {time: T_STAT_QUESTION, amount: 0.045},
 ];
 
-/* running program counter, top right — accelerates with the montage */
+/* running program counter, top right — tracks the cut density, so it
+   creeps through the flagships and spins out through the strobe, arriving
+   just under 170 as the stat slams */
 const Counter: React.FC<{t: number}> = ({t}) => {
   const n = Math.round(
     interpolate(
       t,
-      [FLAGSHIP_CARDS[0].time, beatTime(DROP_BEAT - 40), beatTime(DROP_BEAT - 24), T_STAT_COUNT],
-      [1, 24, 90, 170],
+      [
+        FLAGSHIP_CARDS[0].time,
+        beatTime(DROP_BEAT - 30), // rapid wall starts
+        beatTime(DROP_BEAT - 28), // 2 / beat
+        beatTime(DROP_BEAT - 26), // 4 / beat
+        T_STAT_COUNT,
+      ],
+      [1, 12, 20, 35, 90],
       {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
     ),
   );
@@ -44,15 +57,15 @@ const Intro: React.FC<{t: number}> = ({t}) => {
   return (
     <AbsoluteFill style={{justifyContent: 'center', padding: '0 140px'}}>
       <div style={{fontFamily: MONO, fontSize: 40, color: DIM}}>
-        {b(-64) && <div>for years, hack club has run</div>}
+        {b(-50) && <div>for years, hack club has run</div>}
       </div>
-      {b(-62) && (
+      {b(-48) && (
         <div style={{...DOTO_HEAVY, fontSize: 130, color: FG, margin: '20px 0'}}>
           YOU SHIP, WE SHIP
         </div>
       )}
       <div style={{fontFamily: MONO, fontSize: 40, color: FG}}>
-        {b(-59) && (
+        {b(-45) && (
           <div>
             you ship a project <span style={{color: ACID}}>→</span> they ship you
             something real
@@ -74,9 +87,7 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
   const labelLeft = idx % 2 === 0;
   return (
     <AbsoluteFill>
-      <AbsoluteFill
-        style={{justifyContent: 'center', alignItems: 'center', translate: '0 -70px'}}
-      >
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
         <div
           style={{
             width: 1320, height: 700, overflow: 'hidden',
@@ -98,7 +109,7 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
       </AbsoluteFill>
       <div
         style={{
-          position: 'absolute', bottom: 105,
+          position: 'absolute', bottom: 140,
           ...(labelLeft ? {left: 80} : {right: 80, textAlign: 'right' as const}),
         }}
       >
@@ -142,7 +153,8 @@ const Rapid: React.FC<{t: number}> = ({t}) => {
 };
 
 const Stats: React.FC<{t: number}> = ({t}) => {
-  const rollFast = interpolate(t, [T_STAT_COUNT, T_STAT_COUNT + PERIOD * 2], [90, 170], {
+  // pick up where the corner counter left off and roll home in one beat
+  const rollFast = interpolate(t, [T_STAT_COUNT, T_STAT_COUNT + PERIOD], [90, 170], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
   });
   return (
@@ -153,21 +165,19 @@ const Stats: React.FC<{t: number}> = ({t}) => {
       <div style={{fontFamily: MONO, fontSize: 40, color: DIM, marginTop: 10}}>
         programs shipped
       </div>
-      {t >= T_STAT_KINDS && (
-        <div style={{fontFamily: MONO, fontSize: 38, color: FG, marginTop: 60}}>
-          hardware · games · websites · hackathons · music
-        </div>
-      )}
-      {t >= T_STAT_QUESTION && (
-        <div style={{marginTop: 60}}>
+      <div style={{fontFamily: MONO, fontSize: 38, color: FG, marginTop: 60, minHeight: 48}}>
+        {t >= T_STAT_KINDS && 'hardware · games · websites · hackathons · music'}
+      </div>
+      <div style={{marginTop: 40, minHeight: 56}}>
+        {t >= T_STAT_QUESTION && (
           <Typewriter
             text="about cybersecurity: "
             startFrame={sec(T_STAT_QUESTION)}
             endFrame={sec(T_STAT_QUESTION + 1.1)}
             style={{fontSize: 44, color: ACID}}
           />
-        </div>
-      )}
+        )}
+      </div>
     </AbsoluteFill>
   );
 };
@@ -183,7 +193,7 @@ export const Lineage: React.FC = () => {
 
   return (
     <AbsoluteFill style={{background: BG}}>
-      <Punch hits={CUT_TIMES.map((c) => c)} amount={0.045}>
+      <Punch hits={PUNCH_HITS}>
         {view}
       </Punch>
       {t < T_STAT_COUNT && <Counter t={t} />}

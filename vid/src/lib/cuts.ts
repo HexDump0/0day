@@ -75,7 +75,7 @@ export interface Card {
   tag: string;
 }
 
-/* Flagship YSWS wall — one card every 2 beats from beat 29 (~18.9s); the
+/* Flagship YSWS wall — one card every 1.5 beats from beat 29 (~18.9s); the
    verse-2 vocal re-enters ~0.42s after the first card */
 const FLAGSHIPS: [string, string, string][] = [
   ['stardance', 'Stardance', 'the largest STEM event of the summer'],
@@ -88,27 +88,49 @@ const FLAGSHIPS: [string, string, string][] = [
   ['anvil', 'Anvil', 'build something to help hackers'],
 ];
 export const FLAGSHIP_CARDS: Card[] = FLAGSHIPS.map(([slug, name, tag], i) => ({
-  time: T_FLAGSHIP_START + i * 2 * PERIOD,
+  time: T_FLAGSHIP_START + i * 1.5 * PERIOD,
   slug,
   name,
   tag,
 }));
 
-/* Rapid-fire wall — real program names from the catalog, 1 per beat then
-   2 per beat as it accelerates into the stat block */
-const RAPID_NAMES = [
-  'Midnight', 'Juice', 'Neighborhood', 'Highway', 'Boot', 'HomeLab',
-  'Hackvault', 'Outpost', 'Reboot', 'HackCraft', 'Lumen', 'Swirl',
-  'Scraps', 'Slushies', 'Fallout', 'Stasis',
-  // double-time from here
-  'Polygon', 'Keeb', 'Noodles', 'Pxl', 'Meow', 'Woof', 'Bauble', 'Fudge',
+/* Rapid-fire wall — real program names from the YSWS catalog. Out of the
+   flagship wall (1 card / 1.5 beats) the montage keeps halving its cut
+   length — 1 beat → 1/2 → 1/4 — and spends most of its 10 beats at 4 cuts
+   a beat until 170+ slams at DROP_BEAT-20. All names are real programs;
+   the top gear leans on short names so ~9-frame flashes still register. */
+export interface RapidCard {
+  time: number;
+  name: string;
+  gear: number; // 0..2 → cut length = 1/2^gear beats
+}
+const RAPID_GEARS: {beats: number; names: string[]}[] = [
+  {beats: 1, names: [
+    'Midnight', 'Juice',
+  ]},
+  {beats: 0.5, names: [
+    'Neighborhood', 'Highway', 'Boot', 'HomeLab',
+  ]},
+  {beats: 0.25, names: [
+    'Polygon', 'Keeb', 'Noodles', 'Pxl', 'Meow', 'Woof', 'Bauble', 'Fudge',
+    'Sprig', 'OnBoard', 'Blot', 'Arcade', 'Siege', 'Cider', 'Solder',
+    'Twist', 'Pulse', 'Cinema', 'Jungle', 'Thunder', 'Grub', 'Cafe',
+    'Rewind', 'Emerge',
+  ]},
 ];
-export const RAPID_CARDS: {time: number; name: string}[] = RAPID_NAMES.map(
-  (name, i) => ({
-    time: i < 16 ? beatTime(DROP_BEAT - 40 + i) : beatTime(DROP_BEAT - 24 + (i - 16) * 0.5),
-    name,
-  }),
-);
+export const RAPID_CARDS: RapidCard[] = (() => {
+  const out: RapidCard[] = [];
+  let k = DROP_BEAT - 30;
+  RAPID_GEARS.forEach(({beats, names}, gear) => {
+    for (const name of names) {
+      out.push({time: beatTime(k), name, gear});
+      k += beats;
+    }
+  });
+  // gears must land exactly on the stat block: 2 + 2 + 6 = 10 beats
+  if (k !== DROP_BEAT - 20) throw new Error(`rapid wall ends at beat ${k}`);
+  return out;
+})();
 
 /* Stat block beats */
 export const T_STAT_COUNT = beatTime(DROP_BEAT - 20);   // "170+ programs shipped"
@@ -150,12 +172,17 @@ export const AUDIO_CUTS: {time: number; sound: string; vol?: number}[] = [
   ...FLAGSHIP_CARDS.map((c, i) => ({
     time: c.time, sound: `tick${(i % 3) + 1}.wav`, vol: 0.3,
   })),
-  ...RAPID_CARDS.map((c, i) => ({
-    time: c.time, sound: `tick${(i % 3) + 1}.wav`, vol: 0.16,
+  /* ticks thin out as the wall speeds up — per cut, then every other cut
+     in the top gear — so the peak stays musical, not machine-gun */
+  ...RAPID_CARDS.filter((c, i) => c.gear <= 1 || i % 2 === 0).map((c, i) => ({
+    time: c.time,
+    sound: `tick${(i % 3) + 1}.wav`,
+    vol: [0.16, 0.13, 0.1][c.gear],
   })),
   {time: beatTime(DROP_BEAT + 8), sound: 'whoosh.wav', vol: 0.4},
   {time: beatTime(DROP_BEAT + 12), sound: 'whoosh.wav', vol: 0.4},
-  {time: T_STAT_COUNT, sound: 'whoosh.wav', vol: 0.45},
+  // stat block stays in the tick family — no whoosh on the 170+ slam
+  {time: T_STAT_COUNT, sound: 'tick1.wav', vol: 0.32},
 ];
 
 export const YSWS_ASSETS = assets as Record<

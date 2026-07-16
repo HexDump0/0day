@@ -4,7 +4,7 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, random, useCurrentFrame} from 'remotion';
 import {ACID, FG, HAIR, INK, MONO} from '../theme';
-import {FPS, impulse} from '../lib/timeline';
+import {FPS, sec} from '../lib/timeline';
 
 /* ---- global texture: scanlines + vignette + drifting grain ---- */
 export const Chrome: React.FC<{opacity?: number}> = ({opacity = 1}) => {
@@ -146,16 +146,35 @@ export const Typer: React.FC<{
 };
 
 /* ---- beat-locked punch-in zoom + chromatic burst wrapper ----
-   `hits` are timeline seconds; scale/aberration decay after each hit. */
+   `hits` are timeline seconds — plain numbers use `amount`, or pass
+   {time, amount} for per-hit weights (amount 0 = cut with no punch).
+   Scale/aberration decay after each hit; the burst tracks the hit's
+   weight so small punches get proportionally small aberration. */
+export interface PunchHit {
+  time: number;
+  amount: number;
+}
 export const Punch: React.FC<{
-  hits: number[];
+  hits: (number | PunchHit)[];
   amount?: number;
   children: React.ReactNode;
 }> = ({hits, amount = 0.055, children}) => {
   const frame = useCurrentFrame();
-  const k = impulse(frame, hits, 12);
+  let n = 0; // normalized impulse of the dominant hit
+  let a = 0; // that hit's zoom amount
+  for (const h of hits) {
+    const [time, amt] = typeof h === 'number' ? [h, amount] : [h.time, h.amount];
+    const d = frame - sec(time);
+    if (d < 0) continue;
+    const imp = Math.exp((-3 * d) / 12);
+    if (amt * imp > a * n) {
+      n = imp;
+      a = amt;
+    }
+  }
+  const k = n * Math.min(1, a / 0.045);
   return (
-    <AbsoluteFill style={{transform: `scale(${1 + amount * k})`}}>
+    <AbsoluteFill style={{transform: `scale(${1 + a * n})`}}>
       {children}
       {k > 0.25 && (
         <AbsoluteFill

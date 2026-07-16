@@ -30,9 +30,20 @@ export const beatIndexAt = (s: number): number => (s - OFFSET) / PERIOD;
 
 /* ---- landmark moments ----
    Everything hangs off the chorus downbeat so a lyric retime only needs new
-   beats.json/lyrics.json — the whole edit re-derives. */
-const T_CHORUS_START = 54.25;              // first "Drink..." line (LRC)
-export const DROP_BEAT = Math.round((T_CHORUS_START - OFFSET) / PERIOD);
+   beats.json/lyrics.json — the whole edit re-derives.
+
+   Video time == song time up to the tape-stop. The audio files are untouched
+   and the verse plays continuously — but the montage doesn't need the whole
+   verse, so the silent gap hides a GAP_SKIP jump: the music dies wherever
+   the tape-stop lands (mid-line is fine, that's the effect), and after the
+   gap the same files resume at the chorus via trimBefore in the Mix. Every
+   constant below T_TAPE_STOP is in both clocks; everything after is video
+   time (song time minus GAP_SKIP). */
+const T_CHORUS_START = 54.25;              // first "Drink..." line (LRC, song time)
+const SONG_DROP_BEAT = Math.round((T_CHORUS_START - OFFSET) / PERIOD);
+export const GAP_SKIP_BEATS = 14;
+export const GAP_SKIP = GAP_SKIP_BEATS * PERIOD; // song seconds skipped in the gap
+export const DROP_BEAT = SONG_DROP_BEAT - GAP_SKIP_BEATS; // video beat of the drop
 export const T_DROP = beatTime(DROP_BEAT); // chorus downbeat, 0DAY reveal
 
 export const T_DEDICATION = 8.75;          // "This one's dedicated..."
@@ -40,13 +51,13 @@ export const T_VERSE = 13.98;              // verse starts → lineage montage
 export const T_TAPE_STOP = T_DROP - 2 * BAR; // instrumental dies; the gap
 export const T_ZERO = T_TAPE_STOP + 1.5;   // the "0" slams (sub hit)
 export const T_UNTIL_NOW = T_DROP - 2.0;   // riser begins to bite
-export const T_OUTRO = 71.6;               // "Zero through Three"
-export const T_END = 78.4;
+export const T_OUTRO = 62.76;              // "Zero through Three" (song 71.6)
+export const T_END = 69.56;
 
 export const DURATION = sec(T_END);
 
-/* Chorus "Hack all the things" vocal hits (LRC) */
-export const CHORUS_HITS = [55.56, 57.95, 60.62, 65.55, 68.23, 70.75];
+/* Chorus "Hack all the things" vocal hits (LRC song times minus GAP_SKIP) */
+export const CHORUS_HITS = [46.72, 49.11, 51.78, 56.71, 59.39, 61.91];
 
 /* The verse plays from its natural start right after the dedication, but
    sits lowered in the mix under the YSWS setup cards — present for flow,
@@ -54,7 +65,7 @@ export const CHORUS_HITS = [55.56, 57.95, 60.62, 65.55, 68.23, 70.75];
    beats into the Stardance card, where "Put your bytes up" (sung attack
    ~19.31) lands at full volume in its own pocket. */
 export const T_VOX_RESUME = T_VERSE;
-export const T_FLAGSHIP_START = beatTime(DROP_BEAT - 56);
+export const T_FLAGSHIP_START = beatTime(DROP_BEAT - 42);
 
 /* frames since the most recent event in `times`; Infinity if none yet */
 export const sinceLast = (frame: number, times: number[]): number => {
