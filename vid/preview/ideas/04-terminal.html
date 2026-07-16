@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>idea 04 — the manifest: cat programs.log</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  #term {
+    position: absolute; top: 120px; left: 100px; right: 700px; bottom: 140px;
+    overflow: hidden; font-size: 30px; line-height: 1.55;
+  }
+  #scroll { position: absolute; left: 0; right: 0; bottom: 0; }
+  .ln { white-space: pre; color: var(--fg); display: none; }
+  .ln.on { display: block; }
+  .ln .ix { color: var(--dim); }
+  .ln .kind { color: var(--dim); }
+  .ln .ok { color: var(--acid); }
+  .ln.cur { background: rgba(198,245,46,.08); }
+
+  #preview {
+    position: absolute; top: 120px; right: 100px; width: 540px;
+    visibility: hidden;
+  }
+  #preview .box {
+    width: 540px; height: 304px; border: 1px solid var(--hair);
+    background: #131310; overflow: hidden;
+  }
+  #preview img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(1) contrast(1.05) brightness(.9);
+  }
+  #preview .cap { font-size: 24px; color: var(--dim); margin-top: 12px; }
+  #preview .cap b { color: var(--fg); font-weight: normal; }
+
+  #wc { position: absolute; left: 100px; bottom: 70px; font-size: 30px; visibility: hidden; }
+  #wc .out { color: var(--acid); }
+
+  #slam {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; visibility: hidden; z-index: 40;
+    background: rgba(11,11,9,.88);
+  }
+  #slam .big { font-size: 340px; line-height: 1; color: var(--fg); }
+  #slam .sub { font-size: 40px; color: var(--dim); margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="stage">
+  <div class="punch" id="punch">
+    <div id="term"><div id="scroll"></div></div>
+    <div id="preview">
+      <div class="box"><img id="pimg" src=""></div>
+      <div class="cap mono">preview: <b id="pname"></b></div>
+    </div>
+    <div id="wc" class="mono">$ wc -l programs.log<br><span class="out" id="wcout"></span></div>
+    <div id="slam">
+      <div class="big doto">170+</div>
+      <div class="sub mono">programs shipped · about cybersecurity: 0</div>
+    </div>
+  </div>
+  <div class="hud" style="top:56px; left:100px;">$ cat programs.log <span style="color:var(--acid)">--follow</span></div>
+  <div class="hud" style="top:56px; right:100px;">programs_shipped: <span class="val" id="counter">090</span></div>
+  <div class="chrome"><div class="lines"></div><div class="vig"></div></div>
+  <div class="tag-mock">MOCKUP 04 — the manifest: a terminal streams the catalog, artwork in the preview pane</div>
+  <button class="replay">replay (r)</button>
+</div></div>
+
+<script src="common.js"></script>
+<script>
+const A = '../../public/assets/ysws/';
+/* [name, kind, art-slug or null] — flagships (with artwork) lead */
+const ROWS = [
+  ['stardance',    'stem summer',   'stardance'],
+  ['macondo',      'hackathon',     'macondo'],
+  ['forge',        'hardware',      'forge'],
+  ['the-game',     'game night',    'game'],
+  ['horizons',     'hackathons',    'horizons'],
+  ['blueprint',    'hardware',      'blueprint'],
+  ['anvil',        'tooling',       'anvil'],
+  ['midnight',     'hardware',      null], ['juice', 'games', null],
+  ['neighborhood', 'housing',       null], ['highway', 'hardware', null],
+  ['boot',         'os dev',        null], ['homelab', 'servers', null],
+  ['hackvault',    'security',      null], ['outpost', 'irl', null],
+  ['reboot',       'hardware',      null], ['hackcraft', 'games', null],
+  ['lumen',        'graphics',      null], ['swirl', 'audio', null],
+  ['scraps',       'hardware',      null], ['slushies', 'web', null],
+  ['fallout',      'games',         null], ['stasis', 'hardware', null],
+  ['polygon',      'graphics',      null], ['keeb', 'keyboards', null],
+  ['noodles',      'animation',     null], ['pxl', 'art', null],
+  ['meow',         'web',           null], ['woof', 'web', null],
+];
+/* flagships 1/beat, then the tail sprints: 2/beat → 4/beat */
+const times = ROWS.map((_, i) =>
+  i < 7 ? beat(i)
+  : i < 15 ? beat(7 + (i - 7) * 0.5)
+  : beat(11 + (i - 15) * 0.25));
+const T_WC   = beat(15.5);
+const T_SLAM = beat(18);
+const LOOP   = beat(26);
+
+const scroll = document.getElementById('scroll');
+const pad = (s, n) => (s + ' '.repeat(n)).slice(0, n);
+const els = ROWS.map(([name, kind, art], i) => {
+  const d = document.createElement('div');
+  d.className = 'ln mono';
+  d.innerHTML = `<span class="ix">[${String(i + 1).padStart(3, '0')}]</span> ` +
+    `${pad(name, 16)}<span class="kind">${pad(kind, 14)}</span><span class="ok">SHIPPED</span>`;
+  scroll.appendChild(d);
+  return d;
+});
+
+const preview = document.getElementById('preview');
+const pimg = document.getElementById('pimg');
+const pname = document.getElementById('pname');
+const wc = document.getElementById('wc');
+const wcout = document.getElementById('wcout');
+const slam = document.getElementById('slam');
+const punch = document.getElementById('punch');
+const counter = document.getElementById('counter');
+
+fitStage();
+run((t) => {
+  const idx = times.findLastIndex((h) => t >= h);
+  els.forEach((el, i) => {
+    el.classList.toggle('on', i <= idx);
+    el.classList.toggle('cur', i === idx && t < T_WC);
+  });
+  /* #scroll is bottom-anchored: revealed lines stack up and the oldest
+     scroll off the top of the box, like a live tail */
+
+  /* preview pane follows the newest row that has artwork */
+  let artIdx = -1;
+  for (let i = Math.min(idx, ROWS.length - 1); i >= 0; i--) {
+    if (ROWS[i][2]) { artIdx = i; break; }
+  }
+  vis(preview, artIdx >= 0 && t < T_SLAM);
+  if (artIdx >= 0) {
+    const [name, , slug] = ROWS[artIdx];
+    if (!pimg.src.includes(slug)) pimg.src = `${A}${slug}.png`;
+    pname.textContent = `${name}  ·  flagship`;
+  }
+
+  vis(wc, t >= T_WC);
+  const wp = Math.min(1, Math.max(0, (t - T_WC) / 0.8));
+  wcout.textContent = t >= T_WC ? `${Math.round(90 + 80 * wp)}${wp >= 1 ? '+' : ''}` : '';
+  vis(slam, t >= T_SLAM);
+
+  const p = Math.min(1, t / T_SLAM);
+  counter.textContent = String(Math.round(90 + 80 * p * p)).padStart(3, '0');
+  const k = impulse(t, times, 0.18) * 0.03 + impulse(t, [T_SLAM], 0.3) * 0.08;
+  punch.style.transform = `scale(${1 + k})`;
+}, LOOP);
+</script>
+</body>
+</html>

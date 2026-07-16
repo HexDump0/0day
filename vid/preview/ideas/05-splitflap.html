@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>idea 05 — split-flap departures board</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  #board {
+    position: absolute; left: 50%; top: 140px; transform: translateX(-50%);
+  }
+  .hdr { display: flex; margin-bottom: 24px; color: var(--dim);
+    font-size: 24px; letter-spacing: .1em; }
+  .hdr .c1 { width: 784px; } .hdr .c2 { width: 504px; } .hdr .c3 { width: 392px; }
+
+  .frow { display: flex; margin-bottom: 10px; }
+  .cell {
+    width: 46px; height: 64px; background: #161613;
+    border: 1px solid rgba(232,231,224,.10); border-radius: 3px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Doto', monospace; font-variation-settings: 'wght' 900;
+    font-size: 38px; color: var(--fg); position: relative;
+    margin-right: 8px; flex: none;
+  }
+  .cell::after { /* the flap hinge */
+    content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(11,11,9,.9);
+  }
+  .cell.blank { color: transparent; }
+  .cell.status { color: var(--acid); }
+  .cell.spin { color: var(--dim); }
+  .frow.dimmed .cell { color: rgba(232,231,224,.22); border-color: rgba(232,231,224,.05); }
+  .frow.dimmed .cell.status { color: rgba(198,245,46,.25); }
+
+  #slam {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; visibility: hidden; z-index: 40;
+  }
+  #slam .big { font-size: 320px; line-height: 1; color: var(--fg);
+    text-shadow: 0 0 90px rgba(0,0,0,.95); }
+  #slam .sub { font-size: 40px; color: var(--dim); margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="stage">
+  <div class="punch" id="punch">
+    <div id="board"></div>
+    <div id="slam">
+      <div class="big doto">170+</div>
+      <div class="sub mono">programs shipped · and counting</div>
+    </div>
+  </div>
+  <div class="hud" style="top:60px; left:100px;">hack club · shipping record</div>
+  <div class="hud" style="top:60px; right:100px;">programs_shipped: <span class="val" id="counter">090</span></div>
+  <div class="chrome"><div class="lines"></div><div class="vig"></div></div>
+  <div class="tag-mock">MOCKUP 05 — the record as a split-flap departures board; every row clacks in on the beat</div>
+  <button class="replay">replay (r)</button>
+</div></div>
+
+<script src="common.js"></script>
+<script>
+/* [program (14 chars), kind (9), status (7)] */
+const ROWS = [
+  ['STARDANCE',    'STEM',      'SHIPPED'],
+  ['MACONDO',      'BOGOTA',    'SHIPPED'],
+  ['FORGE',        'HARDWARE',  'SHIPPED'],
+  ['THE GAME',     'GAMES',     'SHIPPED'],
+  ['HORIZONS',     'IRL',       'SHIPPED'],
+  ['BLUEPRINT',    'HARDWARE',  'SHIPPED'],
+  ['MIDNIGHT',     'HARDWARE',  'SHIPPED'],
+  ['NEIGHBORHOOD', 'HOUSING',   'SHIPPED'],
+  ['HACKVAULT',    'SECURITY',  'SHIPPED'],
+  ['AND 161 MORE', '...',       'SHIPPED'],
+];
+const C1 = 14, C2 = 9, C3 = 7;
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·+-';
+/* first rows land every beat, then double-time into the flip-out */
+const times = ROWS.map((_, i) => i < 6 ? beat(i) : beat(6 + (i - 6) * 0.5));
+const T_SLAM = beat(11);
+const LOOP   = beat(19);
+const FLAP_FRAMES = 7;      // char cycles before it settles
+const FLAP_STEP = 0.045;    // seconds per flap click
+const STAGGER = 0.018;      // per-cell delay along the row
+
+const board = document.getElementById('board');
+board.innerHTML = `<div class="hdr mono"><div class="c1">PROGRAM</div>
+  <div class="c2">KIND</div><div class="c3">STATUS</div></div>`;
+const pad = (s, n) => (s + ' '.repeat(n)).slice(0, n);
+const rows = ROWS.map(([a, b, c]) => {
+  const chars = [...pad(a, C1), ...pad(b, C2), ...pad(c, C3)];
+  const r = document.createElement('div');
+  r.className = 'frow';
+  chars.forEach((ch, ci) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell' + (ci >= C1 + C2 ? ' status' : '');
+    cell.dataset.ch = ch;
+    r.appendChild(cell);
+  });
+  board.appendChild(r);
+  return r;
+});
+
+const slam = document.getElementById('slam');
+const punch = document.getElementById('punch');
+const counter = document.getElementById('counter');
+const rand = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+fitStage();
+run((t) => {
+  rows.forEach((r, ri) => {
+    const t0 = times[ri];
+    r.classList.toggle('dimmed', t >= T_SLAM);
+    [...r.children].forEach((cell, ci) => {
+      const start = t0 + ci * STAGGER;
+      const target = cell.dataset.ch;
+      if (t < start) { cell.textContent = ''; cell.className = cell.className.replace(' spin', ''); return; }
+      const step = Math.floor((t - start) / FLAP_STEP);
+      if (target === ' ') { cell.textContent = ''; cell.classList.add('blank'); return; }
+      if (step < FLAP_FRAMES) {
+        cell.classList.add('spin');
+        cell.textContent = GLYPHS[Math.floor(rand(ri * 97 + ci * 13 + step) * GLYPHS.length)];
+      } else {
+        cell.classList.remove('spin');
+        cell.textContent = target;
+      }
+    });
+  });
+
+  vis(slam, t >= T_SLAM);
+  const p = Math.min(1, t / T_SLAM);
+  counter.textContent = String(Math.round(90 + 80 * p * p)).padStart(3, '0');
+  const k = impulse(t, times, 0.18) * 0.03 + impulse(t, [T_SLAM], 0.3) * 0.08;
+  punch.style.transform = `scale(${1 + k})`;
+}, LOOP);
+</script>
+</body>
+</html>

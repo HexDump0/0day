@@ -10,7 +10,7 @@
   .item {
     position: absolute; left: 0; top: 0;
     visibility: hidden; will-change: transform, opacity;
-    transition: transform .34s cubic-bezier(.2,.9,.25,1), color .34s, opacity .5s;
+    transition: transform .24s cubic-bezier(.2,.9,.25,1), color .24s, opacity .4s;
   }
   .item.hero, .item.wall { visibility: visible; }
 
@@ -32,6 +32,10 @@
   .tile .lbl {
     position: absolute; left: -2px; bottom: -60px; font-size: 40px; color: var(--dim);
     font-family: 'Plex Mono', monospace;
+  }
+  .tile.svg img {
+    object-fit: contain; padding: 50px; box-sizing: border-box;
+    filter: grayscale(1) invert(.85) brightness(1.15);
   }
   .tile.wall img { opacity: .5; }
   .tile.wall .lbl { display: none; }
@@ -80,27 +84,30 @@ const NAMES = [
   'Polygon','Keeb','Noodles','Pxl','Meow','Woof','Bauble','Fudge',
 ];
 const ART = [
-  ['stardance', 'Stardance'], ['macondo', 'Macondo'], ['forge', 'Forge'],
-  ['game', 'Hack Club: The Game'], ['horizons', 'Horizons'], ['blueprint', 'Blueprint'],
+  ['stardance', 'Stardance', false], ['macondo', 'Macondo', false],
+  ['forge', 'Forge', false], ['game', 'Hack Club: The Game', false],
+  ['horizons', 'Horizons', false], ['blueprint', 'Blueprint', false],
+  ['anvil', 'Anvil', false], ['shipyard', 'Shipyard', true],
 ];
 
-/* single-time phase: every 3rd slot is an artwork card; double-time: names only */
-const ITEMS = [];
-let n = 0;
-ART.forEach((art, k) => {
-  ITEMS.push({name: NAMES[n++]}, {name: NAMES[n++]}, {art});
-});
-while (n < NAMES.length) ITEMS.push({name: NAMES[n++]});
+/* flagships with artwork lead (1/beat), then the long tail of names
+   accelerates: 2/beat, then 4/beat straight into the slam */
+const ITEMS = [
+  ...ART.map((art) => ({art})),
+  ...NAMES.map((name) => ({name})),
+];
+const times = ITEMS.map((_, i) =>
+  i < 8 ? beat(i)
+  : i < 20 ? beat(8 + (i - 8) * 0.5)
+  : beat(14 + (i - 20) * 0.25));
+const T_SLAM  = beat(18);
+const T_KINDS = beat(21);
+const T_Q     = beat(23);
+const LOOP    = beat(28);
 
-const times = ITEMS.map((_, i) => i < 18 ? beat(i) : beat(18 + (i - 18) * 0.5));
-const T_SLAM  = beat(25);
-const T_KINDS = beat(28);
-const T_Q     = beat(30);
-const LOOP    = beat(35);
-
-/* wall grid: 6 x 5, upper half; the hero line lives lower so they never collide */
-const COLS = 6, CW = 300, CH = 112;
-const X0 = (1920 - COLS * CW) / 2, Y0 = 140;
+/* wall grid: 8 x 4, upper half; the hero line lives lower so they never collide */
+const COLS = 8, CW = 224, CH = 112;
+const X0 = (1920 - COLS * CW) / 2, Y0 = 150;
 const slot = (i) => ({
   x: X0 + (i % COLS) * CW + CW / 2,
   y: Y0 + Math.floor(i / COLS) * CH + CH / 2,
@@ -113,16 +120,17 @@ const els = ITEMS.map((it) => {
     d.className = 'item name';
     d.textContent = it.name.toUpperCase();
   } else {
-    d.className = 'item tile';
-    d.innerHTML = `<div class="frame"><img src="${A}${it.art[0]}.png"></div>
-      <div class="lbl">${it.art[1].toLowerCase()}</div>`;
+    const [slug, label, isSvg] = it.art;
+    d.className = isSvg ? 'item tile svg' : 'item tile';
+    d.innerHTML = `<div class="frame"><img src="${A}${slug}.${isSvg ? 'svg' : 'png'}"></div>
+      <div class="lbl">${label.toLowerCase()}</div>`;
   }
   wallEl.appendChild(d);
   return d;
 });
 const xf = (x, y, s) => `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${s})`;
 const HERO = (el) => xf(960, el.classList.contains('tile') ? 620 : 800, 1);
-const WALL_SCALE = (el) => el.classList.contains('tile') ? 0.24 : 0.165;
+const WALL_SCALE = (el) => el.classList.contains('tile') ? 0.2 : 0.15;
 
 const punch = document.getElementById('punch');
 const stat = document.getElementById('stat');

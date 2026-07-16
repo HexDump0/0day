@@ -16,7 +16,7 @@ import {Audio} from '@remotion/media';
 import {Sequence, staticFile, interpolate} from 'remotion';
 import {
   ALLOWED_LINES, beatTime, DROP_BEAT, FPS, sec, T_DEDICATION,
-  T_TAPE_STOP, T_VOX_RESUME, T_ZERO, T_DROP, T_END,
+  T_FLAGSHIP_START, T_TAPE_STOP, T_VOX_RESUME, T_ZERO, T_DROP, T_END,
 } from '../lib/timeline';
 
 const RAMP_S = 0.08;
@@ -67,6 +67,20 @@ const VOCAL_LINES = ALLOWED_LINES.filter(
   (line) => line.time <= T_DEDICATION || line.time >= T_VOX_RESUME,
 );
 
+/* Under the YSWS setup the verse sits lowered — audible for flow, quiet
+   enough that the cards still read — then rises across the last two beats
+   so "Put your bytes up" lands at full volume just after Stardance. */
+const VOX_SETUP_GAIN = 0.45;
+const setupVocalGain = (t: number): number => {
+  if (t < T_VOX_RESUME - 0.2) return 1; // dedication stays full
+  return interpolate(
+    t,
+    [beatTime(DROP_BEAT - 58), T_FLAGSHIP_START],
+    [VOX_SETUP_GAIN, 1],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
+  );
+};
+
 const vocalsVolume = (f: number): number => {
   const t = f / FPS;
   // the gap is dead air — no vocal tail may survive the tape-stop
@@ -77,7 +91,7 @@ const vocalsVolume = (f: number): number => {
   for (const l of VOCAL_LINES) {
     g = Math.max(g, gateGain(t, l.gateStart, l.end));
   }
-  return g * masterFade(t);
+  return g * setupVocalGain(t) * masterFade(t);
 };
 
 const sfx = (file: string, at: number, volume = 1): React.ReactNode => (

@@ -48,11 +48,11 @@ export const DURATION = sec(T_END);
 /* Chorus "Hack all the things" vocal hits (LRC) */
 export const CHORUS_HITS = [55.56, 57.95, 60.62, 65.55, 68.23, 70.75];
 
-/* The verse plays from its natural start ("Even out settle scores quick",
-   right as the lineage section begins) — dedication flows into verse 1 the
-   way the artist wrote it, no manufactured instrumental valley. "Put your
-   bytes up" then lands ~0.38s after the Stardance card at beat 29 on its
-   own: that's simply where it sits in the song. */
+/* The verse plays from its natural start right after the dedication, but
+   sits lowered in the mix under the YSWS setup cards — present for flow,
+   quiet enough to read over — and rises back to full across the last two
+   beats into the Stardance card, where "Put your bytes up" (sung attack
+   ~19.31) lands at full volume in its own pocket. */
 export const T_VOX_RESUME = T_VERSE;
 export const T_FLAGSHIP_START = beatTime(DROP_BEAT - 56);
 
