@@ -11,9 +11,9 @@ export interface NavLink {
 
 export const NAV: NavLink[] = [
   { href: '#brief', label: 'What is this?' },
+  { href: '#how', label: 'How it works' },
   { href: '#proof', label: 'Proof' },
   { href: '#rules', label: 'Rules' },
-  { href: '#how', label: 'How it works' },
   { href: '#faq', label: 'FAQ' },
 ];
 
@@ -34,59 +34,45 @@ export interface Direction {
   strap: string;
   lead: string;
   examples: string[];
-  ships: string[];
-  note: string;
 }
 
 export const DIRECTIONS: Direction[] = [
-  {
-    id: 'build',
-    no: '01',
-    title: 'Build',
-    strap: 'Make security useful.',
-    lead:
-      'Write software that helps somebody inspect, defend, understand, or safely demonstrate a real security problem.',
-    examples: [
-      'A scanner that grades a site’s defenses',
-      'A leak finder that hunts exposed secrets',
-      'An exploit proof-of-concept for your own target',
-      'Defensive automation people can actually run',
-    ],
-    ships: ['working tool', 'source code', 'technical writeup'],
-    note: 'A tutorial clone is practice. Your submission should make a decision of its own.',
-  },
-  {
-    id: 'break',
-    no: '02',
-    title: 'Break',
-    strap: 'Find something real.',
-    lead:
-      'Audit open-source software or systems you own, find a real vulnerability, and handle the result like a responsible researcher.',
-    examples: [
-      'Trace an unsafe trust boundary in open source',
-      'Turn a suspicious code path into a reproducible finding',
-      'Show the impact without harming users or data',
-      'Report it privately and document the fix',
-    ],
-    ships: ['reproduction', 'responsible disclosure', 'findings + writeup'],
-    note: 'Paid bounties do not count. 0day is for original work that is not already compensated.',
-  },
-  {
-    id: 'reverse',
-    no: '03',
-    title: 'Reverse',
-    strap: 'Explain the artifact.',
-    lead:
-      'Start with a binary, firmware image, malware sample, file format, or protocol—and work backwards until its behavior makes sense.',
-    examples: [
-      'Malware teardown: persistence, payload, and IOCs',
-      'Firmware dig: hardcoded secrets, backdoors, weak crypto',
-      'Reverse an undocumented format or network protocol',
-      'Explain a hidden feature or anti-analysis technique',
-    ],
-    ships: ['annotated analysis', 'reversed specification', 'parser · unpacker · YARA rule'],
-    note: 'Use isolated environments and only artifacts you legally have. Crackmes and preset challenges are practice, not a ship.',
-  },
+    {
+        id: "build",
+        no: "01",
+        title: "Build",
+        strap: "Make something useful.",
+        lead: "Build software,tools or projects for cybersecurity.",
+        examples: [
+            "A website fuzzer",
+            "Vulnerability scanner",
+            "Packet sniffer",
+        ],
+    },
+    {
+        id: "break",
+        no: "02",
+        title: "Break",
+        strap: "Find something real.",
+        lead: "Find real vulns in software, report them and get a CVE, make detailed a write up on a recent CVE.",
+        examples: [
+            "Write PoC for a new CVE",
+            "Find a CVE on a open source project",
+            "Make a detailed write up on a recent CVE",
+        ],
+    },
+    {
+        id: "reverse",
+        no: "03",
+        title: "Reverse",
+        strap: "Tear stuff apart.",
+        lead: "Reverse engineer a binary, firmware image, malware sample, file format, or protocol and make a write up on your findings.",
+        examples: [
+            "Teardown a malware (safely)",
+            "Reverse engineer a binary or firmware image",
+            "Reverse an undocumented format or network protocol",
+        ],
+    },
 ];
 
 export interface HourMethod {
@@ -109,15 +95,15 @@ export const HOUR_METHODS: HourMethod[] = [
     id: 'lapse',
     no: 'B',
     title: 'Lapse',
-    covers: 'Ghidra, Wireshark, Burp, VMs, hardware, and other tool-driven work.',
+    covers: 'Ghidra, Wireshark, Burp, VMs, hardware, and other work.',
     proof: 'Submit the timelapse.',
   },
   {
     id: 'self',
     no: 'C',
     title: 'Self-declare',
-    covers: 'Research, thinking, documentation, and responsible disclosure.',
-    proof: 'Log it honestly.',
+    covers: 'Research, thinking, documentation.',
+    proof: 'Please log it honestly.',
   },
 ];
 
@@ -127,17 +113,15 @@ export interface RuleItem {
 }
 
 export const IN_SCOPE: RuleItem[] = [
-  { title: 'Your own systems', body: 'Hardware, software, and networks you control.' },
-  { title: 'Open-source code', body: 'Audit it carefully and disclose findings responsibly.' },
-  { title: 'Legal artifacts', body: 'Research samples, firmware you own, and freely distributed binaries.' },
-  { title: 'Original work', body: 'A question you chose—not a flag someone hid for you.' },
+  { title: 'Your own stuff', body: 'Hardware, software, and networks you own.' },
+  { title: 'Open-source code', body: 'And remember to disclose responsibly.' },
+  { title: 'Original work', body: 'Should not be a copy paste of a yt tutorial.' },
 ];
 
 export const OUT_OF_SCOPE: RuleItem[] = [
   { title: 'CTFs and labs', body: 'Great practice. They are not an eligible ship.' },
-  { title: 'Paid bounties', body: 'Already-compensated work does not earn gear again.' },
+  { title: 'Paid bounties', body: 'You already got paid.' },
   { title: 'Preset RE challenges', body: 'Crackmes and challenge writeups are practice.' },
-  { title: 'Uninvited testing', body: 'Never touch a system you do not own or have permission to test.' },
 ];
 
 export interface Step {
@@ -155,17 +139,17 @@ export const STEPS: Step[] = [
   {
     no: '02',
     title: 'Track',
-    body: 'Use Hackatime, Lapse, self-declare, or combine them.',
+    body: 'Use Hackatime, Lapse or self-declare.',
   },
   {
     no: '03',
-    title: 'Prove',
-    body: 'Write up the process and evidence.',
+    title: 'Write up',
+    body: 'Make a write up on your work.',
   },
   {
     no: '04',
     title: 'Get gear',
-    body: 'Approved hours become your balance.',
+    body: 'Get stuff for the hours you spent.',
   },
 ];
 
@@ -177,26 +161,26 @@ export interface Faq {
 export const FAQS: Faq[] = [
   {
     q: 'Who can join?',
-    a: "Anyone 18 or under, anywhere in the world. It's free — that's the whole point of Hack Club.",
+    a: "Anyone 18 or under, anywhere in the world. It's free! that's the whole point of Hack Club.",
   },
   {
     q: "I've never done security before.",
-    a: "Good — that's who this is for. Start on the build side: if you can write code, you can build a scanner, a leak-finder, a cracking visualizer. The deep end can wait.",
+    a: "Good, that's who this is for. Start on the build side: if you can write code, you can build a scanner, a leak finder and other stuff",
   },
   {
     q: 'What counts as a ship?',
-    a: "Something real and original, plus a writeup. CTFs and labs don't count — someone already planted that flag for you. Paid bug bounties don't count either — you already got paid. Practice on CTFs all you want; ship original work.",
+    a: "Something real and original, plus a writeup. CTFs and labs don't count and Paid bug bounties don't count either. Practice on CTFs all you want; ship original work.",
   },
   {
     q: 'How do hours work?',
-    a: 'Declare them however fits your work: link a Hackatime project, record a Lapse timelapse, or self-declare — any or all. At review, your hours are cross-checked against your writeup. The better the writeup, the more defensible the hours — especially the self-declared ones.',
+    a: 'Declare them however fits your work: link a Hackatime project, record a Lapse, or self-declare. At review, your hours are cross checked against your writeup. The better the writeup, the more defensible your hours are especially the self-declared ones.',
   },
   {
     q: 'What gear can I get?',
-    a: 'Flipper Zeros, HackRFs, cyberdecks, Raspberry Pis, Bad USBs, and more. Your hours become a balance; the balance becomes gear. Repeatable — ship again, earn again.',
+    a: 'Flipper Zeros, HackRFs, cyberdecks, Raspberry Pis, Bad USBs, and more!',
   },
   {
     q: 'Is breaking into things... legal?',
-    a: "On your own systems and in open-source code, yes — find the bug, then disclose responsibly. The hard line: never touch anything you don't own or weren't invited to test. That's the difference between a security researcher and a criminal.",
+    a: "On your own systems and in open-source code, yes.",
   },
 ];

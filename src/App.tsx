@@ -37,9 +37,9 @@ export default function App() {
         <Hero />
         <Ticker />
         <Brief />
+        <HowItWorks />
         <Proof />
         <Rules />
-        <HowItWorks />
         <Faq />
         <FinalCta />
       </main>

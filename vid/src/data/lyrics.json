@@ -156,9 +156,9 @@
  {
   "time": 54.25,
   "end": 55.56,
-  "gateStart": 54.07,
+  "gateStart": 53.67,
   "text": "Drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 55.56,
@@ -172,7 +172,7 @@
   "end": 57.95,
   "gateStart": 56.68,
   "text": "Drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 57.95,
@@ -186,7 +186,7 @@
   "end": 60.62,
   "gateStart": 59.18,
   "text": "Drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 60.62,
@@ -200,21 +200,21 @@
   "end": 62.83,
   "gateStart": 61.51,
   "text": "Got this Vodka and this Redbull",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 62.83,
   "end": 64.15,
   "gateStart": 62.65,
   "text": "They still give me wings",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 64.15,
   "end": 65.55,
   "gateStart": 63.97,
   "text": "So we drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 65.55,
@@ -228,7 +228,7 @@
   "end": 68.23,
   "gateStart": 66.71,
   "text": "Drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 68.23,
@@ -242,7 +242,7 @@
   "end": 70.75,
   "gateStart": 69.34,
   "text": "Drink all the booze",
-  "allowed": false
+  "allowed": true
  },
  {
   "time": 70.75,

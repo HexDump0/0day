@@ -24,14 +24,17 @@ CUTOFF = 79.0     # video uses only the first ~79s of the song
 # The verse runs uncut from its first line (13.98 — ducked under the
 # explainer by the Mix envelope, back to full as the first YSWS card lands)
 # through "destroyed recaptcha" (ends 49.27, right at the tape-stop).
-# Still cut: the lines that would spill into the gap (49.27, 51.67) and
-# every booze/vodka chorus line.
+# Still cut: only the lines that would spill into the gap (49.27, 51.67).
+# The full chorus is IN per user decision 2026-07-16 — booze, vodka and all;
+# it plays as an uncut call-and-response from the drop to the outro.
 ALLOWED = {
     0.66,    # Not every geek with a Commodore 64... (Hackers 1995 sample)
     8.75,    # This one's dedicated to all the hackers
     13.98, 15.87, 19.06, 21.27, 24.16, 26.32, 28.91, 31.55, 33.84, 35.49,
     36.26, 37.69, 39.43, 41.58, 42.13, 42.98, 44.15, 46.73,
+    54.25, 56.86, 59.36, 64.15, 66.89, 69.52,  # Drink all the booze (x6)
     55.56, 57.95, 60.62, 65.55, 68.23, 70.75,  # Hack all the things (x6)
+    61.69, 62.83,  # Got this Vodka and this Redbull / They still give me wings
     71.60,   # Zero through Three
     72.88,   # We're in every single ring
 }
@@ -40,6 +43,13 @@ ALLOWED = {
 # be faded out slowly instead of clipped: LRC time -> gate end.
 EXTENDED_ENDS = {
     8.75: 13.6,  # dedication reverb tail breathes out over the explainer
+}
+
+# Lines whose sung attack starts before the LRC time by more than PRE_ROLL:
+# LRC time -> extra pre-roll seconds. The first chorus line is really
+# "So drink all the booze" — the "So" pickup sits ~0.4s ahead of the beat.
+EARLY_STARTS = {
+    54.25: 0.4,
 }
 
 LRC_RE = re.compile(r"\[(\d+):(\d+(?:\.\d+)?)\](.*)")
@@ -69,7 +79,7 @@ def main() -> None:
         out.append({
             "time": ln["time"],
             "end": round(end, 3),
-            "gateStart": round(ln["time"] - PRE_ROLL, 3),
+            "gateStart": round(ln["time"] - PRE_ROLL - EARLY_STARTS.get(ln["time"], 0), 3),
             "text": ln["text"],
             "allowed": ln["time"] in ALLOWED,
         })

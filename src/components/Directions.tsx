@@ -52,24 +52,12 @@ export default function Directions({ embedded = false }: DirectionsProps) {
             <span>{active.strap}</span>
           </header>
           <p className="direction-lead">{active.lead}</p>
-          <div className="direction-detail-grid">
-            <div>
-              <p className="console-label">Starting coordinates</p>
-              <ul>
-                {active.examples.map((example) => <li key={example}>{example}</li>)}
-              </ul>
-            </div>
-            <div>
-              <p className="console-label">Possible output</p>
-              <ul className="ship-list">
-                {active.ships.map((ship) => <li key={ship}>{ship}</li>)}
-              </ul>
-            </div>
+          <div>
+            <p className="console-label">For example</p>
+            <ul>
+              {active.examples.map((example) => <li key={example}>{example}</li>)}
+            </ul>
           </div>
-          <footer>
-            <span>Field note</span>
-            <p>{active.note}</p>
-          </footer>
         </article>
       </div>
   );

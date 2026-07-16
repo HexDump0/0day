@@ -4,7 +4,7 @@ import { STEPS } from '../data/content.ts';
 export default function HowItWorks() {
   return (
     <section id="how" className="sect">
-      <SectionHead no="04" title="How it works" tag="// you ship → we ship" />
+      <SectionHead no="02" title="How it works" tag="// you ship → we ship" />
       <ol className="process-loop rv">
         {STEPS.map((step) => (
           <li key={step.no}>
@@ -16,7 +16,7 @@ export default function HowItWorks() {
         ))}
         <li className="process-repeat" aria-label="Then repeat">
           <span aria-hidden="true">↻</span>
-          <strong>ship again</strong>
+          <strong>and do it again</strong>
         </li>
       </ol>
     </section>

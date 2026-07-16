@@ -1,5 +1,5 @@
-/* 72.42–79s. "Zero through Three, we're in every single ring" — the rings
-   collapse to ring 0, ring 0 becomes 0DAY, cursor blinks, done. */
+/* 62.76–69.56s. "Zero through Three, we're in every single ring" — the rings
+   collapse to ring 0, one deadpan sign-off, then the lockup. */
 import React from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {ACID, BG, DIM, DOTO_HEAVY, FG, MONO} from '../theme';
@@ -7,14 +7,15 @@ import {T_END, T_OUTRO} from '../lib/timeline';
 
 const RING_STEP = 0.27;
 const T_RING0 = T_OUTRO + 3 * RING_STEP;   // "ring 0" lands
-const T_LOCKUP = T_OUTRO + 3.2;            // final lockup
+const T_SIGNOFF = T_OUTRO + 3.2;           // rings out, sign-off in
+const T_LOCKUP = T_SIGNOFF + 1.44;         // final lockup
 
 export const Outro: React.FC = () => {
   const frame = useCurrentFrame();
   const t = frame / 60;
   const blink = Math.floor(frame / 20) % 2 === 0;
 
-  if (t < T_LOCKUP) {
+  if (t < T_SIGNOFF) {
     const step = Math.min(Math.floor((t - T_OUTRO) / RING_STEP), 3);
     const ring = 3 - step;
     return (
@@ -33,6 +34,17 @@ export const Outro: React.FC = () => {
             we’re in every single ring
           </div>
         )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (t < T_LOCKUP) {
+    // plain card, same deadpan register as the dedication
+    return (
+      <AbsoluteFill style={{background: BG, justifyContent: 'center', alignItems: 'center'}}>
+        <div style={{fontFamily: MONO, fontSize: 44, color: FG}}>
+          and dont actually hack into nasa tho
+        </div>
       </AbsoluteFill>
     );
   }

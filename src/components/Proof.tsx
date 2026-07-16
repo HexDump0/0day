@@ -16,16 +16,15 @@ export default function Proof() {
 
   return (
     <section id="proof" className="sect proof">
-      <SectionHead no="02" title="Proof of work" tag="// one required file" />
+      <SectionHead no="03" title="Writeups"/>
       <div className="proof-intro rv">
-        <p>Track the hours however the work happened.</p>
-        <p><span>The writeup is not optional.</span> It is what makes the time believable.</p>
+        <p>How do I track the hours?</p>
+        <p>The <span>writeup</span> is not optional.</p>
       </div>
 
       <div className="proof-stack corners rv">
         <div className="proof-sources-head">
           <span>// time sources</span>
-          <span>any or all — they can overlap</span>
         </div>
 
         <ul className="proof-sources" aria-label="Ways to track time">
@@ -47,11 +46,10 @@ export default function Proof() {
         <article className="proof-file">
           <span className="proof-required">required</span>
           <div className="proof-file-pitch">
-            <p className="manifest-id">SHIP_MANIFEST.MD</p>
+            <p className="manifest-id">very cool project</p>
             <h3>WRITEUP<span>.md</span></h3>
             <p>
-              Show the path: decisions, dead ends, evidence, and the result.
-              The deeper the file, the more defensible the hours.
+              Detailed write up of your work, including the process, evidence, and results. Preferably hosted in your blog or in a markdown format in your repo 
             </p>
           </div>
           <div className="proof-doc" aria-hidden="true">
@@ -84,11 +82,6 @@ export default function Proof() {
         </article>
       </div>
 
-      <div className="proof-review rv">
-        <code>$ review writeup --against declared_hours</code>
-        <p>A human reads the file and checks the hours against the work.</p>
-        <strong>approved hours → gear</strong>
-      </div>
     </section>
   );
 }

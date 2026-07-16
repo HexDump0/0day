@@ -137,29 +137,32 @@ export const T_STAT_COUNT = beatTime(DROP_BEAT - 20);   // "170+ programs shippe
 export const T_STAT_KINDS = beatTime(DROP_BEAT - 16);   // hardware / games / ...
 export const T_STAT_QUESTION = beatTime(DROP_BEAT - 12); // "about cybersecurity:"
 
-/* Drop-section claim cards (between chorus vocal hits) */
+/* Drop-section cards (between chorus vocal hits). Directions/straps are
+   verbatim from the site's src/data/content.ts — the video and the landing
+   page must speak with one voice. */
 export interface Claim {
   time: number;
-  kind: 'lyric' | 'claim' | 'track';
+  kind: 'reveal' | 'lyric' | 'first' | 'brief' | 'direction' | 'thesis' | 'loot';
   title: string;
-  body?: string[];
+  no?: string; // direction number
+  strap?: string; // direction strap
+  body?: string[]; // loot manifest rows
 }
 export const DROP_SCHEDULE: Claim[] = [
-  {time: T_DROP, kind: 'claim', title: '0DAY'},
+  {time: T_DROP, kind: 'reveal', title: '0DAY'},
   {time: CHORUS_HITS[0], kind: 'lyric', title: 'HACK ALL THE THINGS'},
-  {time: beatTime(DROP_BEAT + 4), kind: 'claim', title: "hack club's first cybersecurity ysws"},
+  {time: beatTime(DROP_BEAT + 4), kind: 'first', title: "hack club's first cybersecurity ysws"},
   {time: CHORUS_HITS[1], kind: 'lyric', title: 'HACK ALL THE THINGS'},
-  {time: beatTime(DROP_BEAT + 8), kind: 'track', title: 'track 01 — build',
-    body: ['scanner', 'log analyzer', 'leak finder', 'password cracker, visualized']},
+  {time: beatTime(DROP_BEAT + 8), kind: 'brief', title: 'do something real in security.'},
   {time: CHORUS_HITS[2], kind: 'lyric', title: 'HACK ALL THE THINGS'},
-  {time: beatTime(DROP_BEAT + 12), kind: 'track', title: 'track 02 — break',
-    body: ['audit real code', 'reverse malware', 'dissect captures', 'trace attackers']},
-  {time: beatTime(DROP_BEAT + 14), kind: 'claim', title: 'you ship → we ship'},
-  {time: beatTime(DROP_BEAT + 16), kind: 'claim', title: 'reviewed by humans'},
+  {time: beatTime(DROP_BEAT + 12), kind: 'direction', no: '01', title: 'BUILD', strap: 'make security useful.'},
+  {time: beatTime(DROP_BEAT + 14), kind: 'direction', no: '02', title: 'BREAK', strap: 'find something real.'},
+  {time: beatTime(DROP_BEAT + 16), kind: 'direction', no: '03', title: 'REVERSE', strap: 'explain the artifact.'},
   {time: CHORUS_HITS[3], kind: 'lyric', title: 'HACK ALL THE THINGS'},
-  {time: beatTime(DROP_BEAT + 20), kind: 'claim', title: '18 & under · worldwide · free'},
+  {time: beatTime(DROP_BEAT + 20), kind: 'thesis', title: '…or your own idea'},
   {time: CHORUS_HITS[4], kind: 'lyric', title: 'HACK ALL THE THINGS'},
-  {time: beatTime(DROP_BEAT + 24), kind: 'claim', title: 'no certifications · no gatekeeping'},
+  {time: beatTime(DROP_BEAT + 24), kind: 'loot', title: 'hours → gear',
+    body: ['flipper zero', 'hackrf one', 'cyberdeck', 'raspberry pi']},
   {time: CHORUS_HITS[5], kind: 'lyric', title: 'HACK ALL THE THINGS'},
 ];
 
@@ -179,9 +182,7 @@ export const AUDIO_CUTS: {time: number; sound: string; vol?: number}[] = [
     sound: `tick${(i % 3) + 1}.wav`,
     vol: [0.16, 0.13, 0.1][c.gear],
   })),
-  {time: beatTime(DROP_BEAT + 8), sound: 'whoosh.wav', vol: 0.4},
-  {time: beatTime(DROP_BEAT + 12), sound: 'whoosh.wav', vol: 0.4},
-  // stat block stays in the tick family — no whoosh on the 170+ slam
+  // no whooshes anywhere — the chorus carries the drop, ticks carry the cuts
   {time: T_STAT_COUNT, sound: 'tick1.wav', vol: 0.32},
 ];
 

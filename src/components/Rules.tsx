@@ -4,7 +4,7 @@ import { IN_SCOPE, OUT_OF_SCOPE } from '../data/content.ts';
 export default function Rules() {
   return (
     <section id="rules" className="sect rules">
-      <SectionHead no="03" title="Rules of engagement" tag="// real · original · unpaid" />
+      <SectionHead no="04" title="What counts?" />
       <div className="rules-grid corners rv">
         <article className="rule-column rule-yes">
           <header>
@@ -23,7 +23,7 @@ export default function Rules() {
         <article className="rule-column rule-no">
           <header>
             <span>DENY</span>
-            <h3>Doesn’t count</h3>
+            <h3>OUT OF SCOPE</h3>
           </header>
           <ul>
             {OUT_OF_SCOPE.map((item) => (
@@ -34,10 +34,6 @@ export default function Rules() {
             ))}
           </ul>
         </article>
-      </div>
-      <div className="hard-rule rv">
-        <span>THE LINE</span>
-        <p>Never touch anything you do not own or were not invited to test.</p>
       </div>
     </section>
   );
