@@ -4,17 +4,19 @@
    completely in the gap (tape-stop covers the kill), fades out at the end.
 
    Vocals: gated by the LRC whitelist (booze lines and the NASA bar never
-   reach the master). The verse runs uncut; around the "you ship, we ship"
-   explainer a slow envelope breathes the stem out after the dedication and
-   back in as Stardance lands. 80ms cosine ramps on the hard gates.
+   reach the master). The verse plays from its natural start right after the
+   dedication — no time-shift, no manufactured mute; "Put your bytes up"
+   lands just after the Stardance card because that's where it sits in the
+   song. Each kept line uses cosine ramps.
 
    SFX: tape stop, sub hit on the "0", riser into the drop, whooshes/ticks
    are triggered by the scenes' cut lists. */
 import React from 'react';
-import {Audio, Sequence, staticFile, interpolate} from 'remotion';
+import {Audio} from '@remotion/media';
+import {Sequence, staticFile, interpolate} from 'remotion';
 import {
-  ALLOWED_LINES, beatTime, DROP_BEAT, FPS, sec,
-  T_TAPE_STOP, T_ZERO, T_DROP, T_END,
+  ALLOWED_LINES, beatTime, DROP_BEAT, FPS, sec, T_DEDICATION,
+  T_TAPE_STOP, T_VOX_RESUME, T_ZERO, T_DROP, T_END,
 } from '../lib/timeline';
 
 const RAMP_S = 0.08;
@@ -56,26 +58,14 @@ const instrumentalVolume = (f: number): number => {
   return duckGain(t) * masterFade(t);
 };
 
-/* slow breath around the explainer: vocals duck (not mute) after the
-   dedication tail, back to full right as the first YSWS card (Stardance)
-   hits at beat DROP_BEAT-56 */
-const T_VOX_OUT = 11.8;
-const T_VOX_OUT_END = 14.2;
-const T_VOX_IN = beatTime(DROP_BEAT - 56) - 1.2;
-const T_VOX_IN_END = beatTime(DROP_BEAT - 56) + 0.2;
-const VOX_DUCK = 0.5;
+const RESUME_LINE = ALLOWED_LINES.find((line) => line.time === T_VOX_RESUME);
+if (!RESUME_LINE) {
+  throw new Error(`Missing vocal resume line at ${T_VOX_RESUME}s`);
+}
 
-const verseEnvelope = (t: number): number => {
-  if (t < T_VOX_OUT || t >= T_VOX_IN_END) return 1;
-  const span = 1 - VOX_DUCK;
-  if (t < T_VOX_OUT_END) {
-    const p = (t - T_VOX_OUT) / (T_VOX_OUT_END - T_VOX_OUT);
-    return VOX_DUCK + span * 0.5 * (1 + Math.cos(p * Math.PI));
-  }
-  if (t < T_VOX_IN) return VOX_DUCK;
-  const p = (t - T_VOX_IN) / (T_VOX_IN_END - T_VOX_IN);
-  return VOX_DUCK + span * 0.5 * (1 - Math.cos(p * Math.PI));
-};
+const VOCAL_LINES = ALLOWED_LINES.filter(
+  (line) => line.time <= T_DEDICATION || line.time >= T_VOX_RESUME,
+);
 
 const vocalsVolume = (f: number): number => {
   const t = f / FPS;
@@ -84,10 +74,10 @@ const vocalsVolume = (f: number): number => {
     return t < T_TAPE_STOP + 0.12 ? 1 - (t - T_TAPE_STOP) / 0.12 : 0;
   }
   let g = 0;
-  for (const l of ALLOWED_LINES) {
+  for (const l of VOCAL_LINES) {
     g = Math.max(g, gateGain(t, l.gateStart, l.end));
   }
-  return g * verseEnvelope(t) * masterFade(t);
+  return g * masterFade(t);
 };
 
 const sfx = (file: string, at: number, volume = 1): React.ReactNode => (

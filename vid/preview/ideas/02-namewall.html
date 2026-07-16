@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>idea 02 — accumulating name wall</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  /* every item (name or artwork card) is one div that moves between two
+     states: HERO (big, low center, current beat) → WALL (its grid slot) */
+  .item {
+    position: absolute; left: 0; top: 0;
+    visibility: hidden; will-change: transform, opacity;
+    transition: transform .34s cubic-bezier(.2,.9,.25,1), color .34s, opacity .5s;
+  }
+  .item.hero, .item.wall { visibility: visible; }
+
+  .name {
+    font-family: 'Doto', monospace; font-variation-settings: 'wght' 900;
+    font-size: 150px; color: var(--fg); white-space: nowrap;
+  }
+  .name.wall { color: rgba(232,231,224,.42); }
+
+  .tile { width: 1000px; height: 470px; }
+  .tile .frame {
+    position: absolute; inset: 0; overflow: hidden;
+    border: 1px solid var(--hair); background: #131310;
+  }
+  .tile img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(1) contrast(1.05) brightness(.9);
+  }
+  .tile .lbl {
+    position: absolute; left: -2px; bottom: -60px; font-size: 40px; color: var(--dim);
+    font-family: 'Plex Mono', monospace;
+  }
+  .tile.wall img { opacity: .5; }
+  .tile.wall .lbl { display: none; }
+  .tile.wall .frame { border-color: rgba(232,231,224,.10); }
+
+  #wallDim.dimmed .item.wall { opacity: .14; }
+
+  .stat {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; visibility: hidden; z-index: 40;
+  }
+  .stat .big {
+    font-size: 340px; line-height: 1; color: var(--fg);
+    text-shadow: 0 0 90px rgba(0,0,0,.9);
+  }
+  .stat .sub { font-size: 40px; color: var(--dim); margin-top: 14px; }
+  .stat .kinds { font-size: 38px; color: var(--fg); margin-top: 56px; visibility: hidden; }
+  .stat .q { font-size: 44px; color: var(--acid); margin-top: 56px; visibility: hidden; }
+  .cursor { display: inline-block; width: .6em; background: var(--acid); color: transparent; }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="stage">
+  <div class="punch" id="punch">
+    <div id="wallDim" style="position:absolute; inset:0;"></div>
+    <div class="stat" id="stat">
+      <div class="big doto" id="statNum">170+</div>
+      <div class="sub mono">programs shipped</div>
+      <div class="kinds mono" id="kinds">hardware · games · websites · hackathons · music</div>
+      <div class="q mono" id="q"><span id="qText"></span><span class="cursor">▮</span></div>
+    </div>
+  </div>
+  <div class="hud" style="top:60px; right:80px;">programs_shipped: <span class="val" id="counter">090</span></div>
+  <div class="chrome"><div class="lines"></div><div class="vig"></div></div>
+  <div class="tag-mock">MOCKUP 02 — names + artwork accumulate into a wall, 170+ slams on top of it</div>
+  <button class="replay">replay (r)</button>
+</div></div>
+
+<script src="common.js"></script>
+<script>
+const A = '../../public/assets/ysws/';
+const NAMES = [
+  'Midnight','Juice','Neighborhood','Highway','Boot','HomeLab',
+  'Hackvault','Outpost','Reboot','HackCraft','Lumen','Swirl',
+  'Scraps','Slushies','Fallout','Stasis',
+  'Polygon','Keeb','Noodles','Pxl','Meow','Woof','Bauble','Fudge',
+];
+const ART = [
+  ['stardance', 'Stardance'], ['macondo', 'Macondo'], ['forge', 'Forge'],
+  ['game', 'Hack Club: The Game'], ['horizons', 'Horizons'], ['blueprint', 'Blueprint'],
+];
+
+/* single-time phase: every 3rd slot is an artwork card; double-time: names only */
+const ITEMS = [];
+let n = 0;
+ART.forEach((art, k) => {
+  ITEMS.push({name: NAMES[n++]}, {name: NAMES[n++]}, {art});
+});
+while (n < NAMES.length) ITEMS.push({name: NAMES[n++]});
+
+const times = ITEMS.map((_, i) => i < 18 ? beat(i) : beat(18 + (i - 18) * 0.5));
+const T_SLAM  = beat(25);
+const T_KINDS = beat(28);
+const T_Q     = beat(30);
+const LOOP    = beat(35);
+
+/* wall grid: 6 x 5, upper half; the hero line lives lower so they never collide */
+const COLS = 6, CW = 300, CH = 112;
+const X0 = (1920 - COLS * CW) / 2, Y0 = 140;
+const slot = (i) => ({
+  x: X0 + (i % COLS) * CW + CW / 2,
+  y: Y0 + Math.floor(i / COLS) * CH + CH / 2,
+});
+
+const wallEl = document.getElementById('wallDim');
+const els = ITEMS.map((it) => {
+  const d = document.createElement('div');
+  if (it.name) {
+    d.className = 'item name';
+    d.textContent = it.name.toUpperCase();
+  } else {
+    d.className = 'item tile';
+    d.innerHTML = `<div class="frame"><img src="${A}${it.art[0]}.png"></div>
+      <div class="lbl">${it.art[1].toLowerCase()}</div>`;
+  }
+  wallEl.appendChild(d);
+  return d;
+});
+const xf = (x, y, s) => `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${s})`;
+const HERO = (el) => xf(960, el.classList.contains('tile') ? 620 : 800, 1);
+const WALL_SCALE = (el) => el.classList.contains('tile') ? 0.24 : 0.165;
+
+const punch = document.getElementById('punch');
+const stat = document.getElementById('stat');
+const counter = document.getElementById('counter');
+const kinds = document.getElementById('kinds');
+const q = document.getElementById('q');
+const qText = document.getElementById('qText');
+const Q_FULL = 'about cybersecurity: ';
+
+fitStage();
+run((t) => {
+  const idx = times.findLastIndex((h) => t >= h);
+  els.forEach((el, i) => {
+    el.classList.remove('hero', 'wall');
+    if (i > idx) { el.style.transform = HERO(el); return; }
+    if (i === idx && t < T_SLAM) {
+      el.classList.add('hero');
+      el.style.transform = HERO(el);
+    } else {
+      const s = slot(i);
+      el.classList.add('wall');
+      el.style.transform = xf(s.x, s.y, WALL_SCALE(el));
+    }
+  });
+
+  wallEl.classList.toggle('dimmed', t >= T_SLAM);
+  vis(stat, t >= T_SLAM);
+  vis(kinds, t >= T_KINDS);
+  vis(q, t >= T_Q);
+  const qp = Math.min(1, Math.max(0, (t - T_Q) / 1.1));
+  qText.textContent = Q_FULL.slice(0, Math.floor(qp * Q_FULL.length));
+
+  /* counter accelerates with the montage, ends pinned at 170 */
+  const p = Math.min(1, t / T_SLAM);
+  counter.textContent = String(Math.round(90 + 80 * p * p)).padStart(3, '0');
+
+  /* beat punch on every reveal + a bigger one on the slam */
+  const k = impulse(t, times, 0.2) * 0.04 + impulse(t, [T_SLAM], 0.3) * 0.08;
+  punch.style.transform = `scale(${1 + k})`;
+}, LOOP);
+</script>
+</body>
+</html>

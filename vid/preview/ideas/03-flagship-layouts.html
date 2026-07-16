@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>idea 03 — flagship wall, no repeated layouts</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  .card { position: absolute; inset: 0; visibility: hidden; }
+  .card img { filter: grayscale(1) contrast(1.05) brightness(.92); will-change: transform; }
+
+  /* L1: full-bleed, name overlaps the image */
+  .full img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .full .shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,9,.85) 0%, transparent 45%); }
+  .full .name { position: absolute; left: 80px; bottom: 120px; font-size: 150px; color: var(--fg); }
+  .full .tag { position: absolute; left: 84px; bottom: 70px; font-size: 30px; color: var(--dim); }
+
+  /* L2/L3: image punched to one side, text owns the other */
+  .split .imgbox { position: absolute; top: 0; bottom: 0; width: 62%; overflow: hidden; border-right: 1px solid var(--hair); }
+  .split.left  .imgbox { left: 0; }
+  .split.right .imgbox { right: 0; border-right: 0; border-left: 1px solid var(--hair); }
+  .split .imgbox img { width: 100%; height: 100%; object-fit: cover; }
+  .split .txt {
+    position: absolute; top: 0; bottom: 0; width: 38%;
+    display: flex; flex-direction: column; justify-content: center; padding: 0 70px;
+  }
+  .split.left  .txt { right: 0; }
+  .split.right .txt { left: 0; }
+  .split .name { font-size: 110px; color: var(--fg); line-height: .95; overflow-wrap: anywhere; }
+  .split .tag { font-size: 30px; color: var(--dim); margin-top: 28px; }
+
+  /* L4: two programs share the frame */
+  .duo .half { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; }
+  .duo .half.a { left: 0; border-right: 1px solid var(--hair); }
+  .duo .half.b { right: 0; }
+  .duo .half img { width: 100%; height: 100%; object-fit: cover; }
+  .duo .half .shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,9,.85) 0%, transparent 40%); }
+  .duo .half .name { position: absolute; left: 60px; bottom: 90px; font-size: 90px; color: var(--fg); }
+  .duo .half .tag { position: absolute; left: 63px; bottom: 48px; font-size: 26px; color: var(--dim); }
+  .duo .half.off { opacity: .35; }
+
+  /* L5: acid duotone slam, outline name centered */
+  .slam img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .slam .tint { position: absolute; inset: 0; background: var(--acid); mix-blend-mode: multiply; opacity: .55; }
+  .slam .dark { position: absolute; inset: 0; background: rgba(11,11,9,.45); }
+  .slam .name {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 210px; color: var(--bg);
+    text-shadow: none; -webkit-text-stroke: 3px var(--fg); color: transparent;
+  }
+  .slam .tag { position: absolute; bottom: 90px; width: 100%; text-align: center; font-size: 30px; color: var(--fg); }
+
+  .note {
+    position: absolute; left: 80px; bottom: 60px; font-size: 28px;
+    color: var(--fg); background: rgba(11,11,9,.75); padding: 10px 18px;
+    border-left: 3px solid var(--acid); visibility: hidden; z-index: 50;
+  }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="stage">
+  <div class="punch" id="punch"></div>
+  <div class="note mono" id="note"></div>
+  <div class="hud" style="top:60px; left:80px;" id="index">[01/05]</div>
+  <div class="hud" style="top:60px; right:80px;">programs_shipped: <span class="val" id="counter">024</span></div>
+  <div class="chrome"><div class="lines"></div><div class="vig"></div></div>
+  <div class="tag-mock">MOCKUP 03 — flagship cards: never the same layout twice, one duotone treatment</div>
+  <button class="replay">replay (r)</button>
+</div></div>
+
+<script src="common.js"></script>
+<script>
+const A = '../../public/assets/ysws/';
+const CARDS = [
+  { html: `<div class="card full">
+      <img src="${A}stardance.png"><div class="shade"></div>
+      <div class="name doto">STARDANCE</div>
+      <div class="tag mono">the largest STEM event of the summer</div>
+    </div>` },
+  { html: `<div class="card split left">
+      <div class="imgbox"><img src="${A}macondo.png"></div>
+      <div class="txt"><div class="name doto">MACONDO</div>
+      <div class="tag mono">ship projects → hackathon in Bogotá</div></div>
+    </div>`,
+    note: 'yes. an actual flight to Bogotá.' },
+  { html: `<div class="card split right">
+      <div class="imgbox"><img src="${A}forge.png"></div>
+      <div class="txt"><div class="name doto">FORGE</div>
+      <div class="tag mono">design + build hardware</div></div>
+    </div>` },
+  { html: `<div class="card duo">
+      <div class="half a"><img src="${A}game.png"><div class="shade"></div>
+        <div class="name doto">THE GAME</div><div class="tag mono">code 40h → IRL game night</div></div>
+      <div class="half b"><img src="${A}horizons.png"><div class="shade"></div>
+        <div class="name doto">HORIZONS</div><div class="tag mono">7 hackathons, run by teenagers</div></div>
+    </div>` },
+  { html: `<div class="card slam">
+      <img src="${A}blueprint.png"><div class="tint"></div><div class="dark"></div>
+      <div class="name doto">BLUEPRINT</div>
+      <div class="tag mono">design hardware, get $400 to build it</div>
+    </div>` },
+];
+const DUR = beat(2);
+const times = CARDS.map((_, i) => i * DUR);
+const LOOP = beat(11);
+
+const punch = document.getElementById('punch');
+punch.innerHTML = CARDS.map((c) => c.html).join('');
+const els = [...punch.querySelectorAll('.card')];
+const note = document.getElementById('note');
+const index = document.getElementById('index');
+const counter = document.getElementById('counter');
+
+fitStage();
+run((t) => {
+  const idx = Math.min(CARDS.length - 1, Math.floor(t / DUR));
+  const local = t - times[idx];
+  els.forEach((el, i) => vis(el, i === idx));
+
+  /* slow push-in / pull-out, alternating so the wall doesn't loop */
+  const img = els[idx].querySelectorAll('img');
+  const pan = idx % 2 === 0 ? 1.04 + local * 0.014 : 1.08 - local * 0.014;
+  img.forEach((im) => { im.style.transform = `scale(${pan})`; });
+
+  /* duo card: spotlight flips halves on the off-beat */
+  if (els[idx].classList.contains('duo')) {
+    const second = local >= beat(1);
+    els[idx].querySelector('.half.a').classList.toggle('off', second);
+    els[idx].querySelector('.half.b').classList.toggle('off', !second);
+  }
+
+  const n = CARDS[idx].note && local > 0.55;
+  vis(note, n);
+  if (n) note.textContent = CARDS[idx].note;
+
+  index.textContent = `[${String(idx + 1).padStart(2, '0')}/05]`;
+  counter.textContent = String(24 + idx * 4).padStart(3, '0');
+  punch.style.transform = `scale(${1 + impulse(t, times, 0.22) * 0.045})`;
+}, LOOP);
+</script>
+</body>
+</html>

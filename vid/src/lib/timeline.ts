@@ -48,6 +48,14 @@ export const DURATION = sec(T_END);
 /* Chorus "Hack all the things" vocal hits (LRC) */
 export const CHORUS_HITS = [55.56, 57.95, 60.62, 65.55, 68.23, 70.75];
 
+/* The verse plays from its natural start ("Even out settle scores quick",
+   right as the lineage section begins) — dedication flows into verse 1 the
+   way the artist wrote it, no manufactured instrumental valley. "Put your
+   bytes up" then lands ~0.38s after the Stardance card at beat 29 on its
+   own: that's simply where it sits in the song. */
+export const T_VOX_RESUME = T_VERSE;
+export const T_FLAGSHIP_START = beatTime(DROP_BEAT - 56);
+
 /* frames since the most recent event in `times`; Infinity if none yet */
 export const sinceLast = (frame: number, times: number[]): number => {
   let best = Infinity;

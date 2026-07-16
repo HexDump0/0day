@@ -22,7 +22,7 @@ const Counter: React.FC<{t: number}> = ({t}) => {
   const n = Math.round(
     interpolate(
       t,
-      [beatTime(DROP_BEAT - 56), beatTime(DROP_BEAT - 40), beatTime(DROP_BEAT - 24), T_STAT_COUNT],
+      [FLAGSHIP_CARDS[0].time, beatTime(DROP_BEAT - 40), beatTime(DROP_BEAT - 24), T_STAT_COUNT],
       [1, 24, 90, 170],
       {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
     ),

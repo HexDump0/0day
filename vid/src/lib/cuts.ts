@@ -1,6 +1,6 @@
 /* The edit decision list. Scenes render from these tables and the audio layer
    places ticks/whooshes from them too — one schedule, two consumers. */
-import {beatTime, CHORUS_HITS, DROP_BEAT, T_DROP} from './timeline';
+import {beatTime, CHORUS_HITS, DROP_BEAT, PERIOD, T_DROP, T_FLAGSHIP_START} from './timeline';
 import assets from '../data/ysws-assets.json';
 import footage from '../data/footage.json';
 
@@ -42,16 +42,28 @@ export interface Shot {
   startFrom?: number;
 }
 export const INTRO_SHOTS: Shot[] = [
-  {time: 1.56, clip: 'c64_title', slate: 'commodore, 1982'},
-  {time: 2.36, clip: 'c64_typing', slate: 'commodore, 1982'},
-  {time: 3.0, clip: 'saturn_ignition', slate: 'nasa, 16mm', startFrom: 2.0},
-  {time: beatTime(5), clip: 'saturn_climb', slate: 'nasa, 16mm',
-    note: '1969: the moon, on 4kb of ram'},
-  {time: beatTime(7), clip: 'sage_lightgun', slate: 'sage, 1956',
-    note: '1956: war games, on vacuum tubes'},
-  {time: beatTime(9), clip: 'ibm_tapes', slate: 'irs, 1966',
-    note: 'every generation hacked anyway'},
-  {time: beatTime(11), clip: 'earth', slate: 'nasa, 16mm'},
+    { time: 1.56, clip: "c64_title", slate: "commodore, 1982" },
+    { time: 2.36, clip: "c64_typing", slate: "commodore, 1982" },
+    { time: 3.0, clip: "saturn_ignition", slate: "nasa, 16mm", startFrom: 2.0 },
+    {
+        time: beatTime(5),
+        clip: "saturn_climb",
+        slate: "nasa",
+        note: "1969: the moon, on 4kb of ram",
+    },
+    {
+        time: beatTime(7),
+        clip: "sage_lightgun",
+        slate: "sage",
+        note: "2026: intelligence became infrastructure",
+    },
+    {
+        time: beatTime(9),
+        clip: "ibm_tapes",
+        slate: "irs",
+        note: "every generation hacked anyway",
+    },
+    { time: beatTime(11), clip: "earth", slate: "nasa, 16mm" },
 ];
 export const T_INTRO_SHOTS_END = 8.75; // dedication card takes over
 export const FOOTAGE = footage as Record<string, {file: string; duration: number}>;
@@ -63,7 +75,8 @@ export interface Card {
   tag: string;
 }
 
-/* Flagship YSWS wall — one card every 2 beats, starting beat 30 (~19.6s) */
+/* Flagship YSWS wall — one card every 2 beats from beat 29 (~18.9s); the
+   verse-2 vocal re-enters ~0.42s after the first card */
 const FLAGSHIPS: [string, string, string][] = [
   ['stardance', 'Stardance', 'the largest STEM event of the summer'],
   ['macondo', 'Macondo', 'ship projects → hackathon in Bogotá'],
@@ -75,7 +88,7 @@ const FLAGSHIPS: [string, string, string][] = [
   ['anvil', 'Anvil', 'build something to help hackers'],
 ];
 export const FLAGSHIP_CARDS: Card[] = FLAGSHIPS.map(([slug, name, tag], i) => ({
-  time: beatTime(DROP_BEAT - 56 + i * 2),
+  time: T_FLAGSHIP_START + i * 2 * PERIOD,
   slug,
   name,
   tag,

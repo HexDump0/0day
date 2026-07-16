@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>idea 01 — the ledger: you ship → we ship</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  #intro {
+    position: absolute; inset: 0; padding: 0 140px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  #intro .l1 { font-size: 40px; color: var(--dim); visibility: hidden; }
+  #intro .l2 { font-size: 130px; color: var(--fg); margin: 20px 0; visibility: hidden; }
+  #intro .l3 { font-size: 40px; color: var(--fg); visibility: hidden; }
+
+  #ledger { position: absolute; inset: 0; visibility: hidden; }
+  #ledger .headL, #ledger .headR {
+    position: absolute; top: 150px; font-size: 34px; color: var(--dim);
+  }
+  #ledger .headL { right: 1040px; }
+  #ledger .headR { left: 1040px; }
+  #ledger .midline {
+    position: absolute; top: 210px; bottom: 160px; left: 959px;
+    width: 1px; background: var(--hair);
+  }
+  .row { position: absolute; width: 100%; visibility: hidden; }
+  .row .give {
+    position: absolute; right: 1040px; font-size: 44px; color: var(--fg);
+    white-space: nowrap; text-align: right;
+  }
+  .row .arrow {
+    position: absolute; left: 910px; width: 100px; text-align: center;
+    font-size: 44px; color: var(--acid); visibility: hidden;
+  }
+  .row .get {
+    position: absolute; left: 1040px; font-size: 44px; color: var(--fg);
+    white-space: nowrap; visibility: hidden;
+  }
+  .row .get .prog {
+    display: block; font-size: 26px; color: var(--dim); margin-top: 8px;
+    font-family: 'Doto', monospace; font-variation-settings: 'wght' 900;
+    letter-spacing: .06em;
+  }
+  .row.old .give, .row.old .get { color: var(--dim); }
+  .row.old .arrow { color: rgba(198,245,46,.4); }
+  .row.fresh .get { color: var(--acid); }
+
+  #foot {
+    position: absolute; bottom: 70px; width: 100%; text-align: center;
+    font-size: 38px; color: var(--fg); visibility: hidden;
+  }
+  #foot .n { color: var(--acid); }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="stage">
+  <div class="punch" id="punch">
+    <div id="intro">
+      <div class="l1 mono">for years, hack club has run</div>
+      <div class="l2 doto">YOU SHIP, WE SHIP</div>
+      <div class="l3 mono">you ship a project <span class="acid">→</span> they ship you <span id="typed"></span><span class="cursor" style="background:var(--acid); color:transparent;">▮</span></div>
+    </div>
+    <div id="ledger">
+      <div class="headL mono">you shipped</div>
+      <div class="headR mono">we shipped</div>
+      <div class="midline"></div>
+      <div id="rows"></div>
+      <div id="foot" class="mono">every trade real. <span class="n">170+</span> programs and counting.</div>
+    </div>
+  </div>
+  <div class="hud" style="top:60px; right:80px;">programs_shipped: <span class="val" id="counter">001</span></div>
+  <div class="chrome"><div class="lines"></div><div class="vig"></div></div>
+  <div class="tag-mock">MOCKUP 01 — "you ship → we ship" becomes a live ledger of real trades</div>
+  <button class="replay">replay (r)</button>
+</div></div>
+
+<script src="common.js"></script>
+<script>
+const TRADES = [
+  ['40 hours of code',      'a game night in Manhattan',            'HACK CLUB: THE GAME'],
+  ['a hardware design',     '$400 to build it',                     'BLUEPRINT'],
+  ['personal projects',     'a hackathon in Bogotá',                'MACONDO'],
+  ['a summer of shipping',  "the summer's largest STEM event",      'STARDANCE'],
+  ['a tool for hackers',    'funding to ship it',                   'ANVIL'],
+  ['7 weeks of challenges', 'real hardware, mailed to you',         'SHIPYARD'],
+];
+const T_L1 = beat(0), T_L2 = beat(2), T_L3 = beat(4);
+const T_LEDGER = beat(8);
+const rowT  = (i) => beat(9 + i * 2);      // left side lands
+const getT  = (i) => beat(9 + i * 2 + 1);  // right side stamps a beat later
+const T_FOOT = beat(22);
+const LOOP   = beat(27);
+
+const rowsEl = document.getElementById('rows');
+const rows = TRADES.map(([give, get, prog], i) => {
+  const r = document.createElement('div');
+  r.className = 'row';
+  r.style.top = `${250 + i * 112}px`;
+  r.innerHTML = `
+    <div class="give mono">${give}</div>
+    <div class="arrow">→</div>
+    <div class="get mono">${get}<span class="prog">${prog}</span></div>`;
+  rowsEl.appendChild(r);
+  return r;
+});
+
+const intro = document.getElementById('intro');
+const ledger = document.getElementById('ledger');
+const foot = document.getElementById('foot');
+const punch = document.getElementById('punch');
+const counter = document.getElementById('counter');
+const typed = document.getElementById('typed');
+const TYPED_FULL = 'something real';
+const [l1, l2, l3] = ['.l1', '.l2', '.l3'].map((s) => intro.querySelector(s));
+
+fitStage();
+run((t) => {
+  intro.style.display = t < T_LEDGER ? 'flex' : 'none';
+  vis(l1, t >= T_L1); vis(l2, t >= T_L2); vis(l3, t >= T_L3);
+  const tp = Math.min(1, Math.max(0, (t - T_L3 - 0.4) / 0.9));
+  typed.textContent = TYPED_FULL.slice(0, Math.floor(tp * TYPED_FULL.length));
+
+  vis(ledger, t >= T_LEDGER);
+  rows.forEach((r, i) => {
+    vis(r, t >= rowT(i));
+    const arrow = r.querySelector('.arrow'), get = r.querySelector('.get');
+    vis(arrow, t >= getT(i) - 0.18);
+    vis(get, t >= getT(i));
+    const isCurrent = t >= rowT(i) && (i === rows.length - 1 ? t < T_FOOT : t < rowT(i + 1));
+    r.classList.toggle('fresh', isCurrent && t >= getT(i));
+    r.classList.toggle('old', !isCurrent && t >= rowT(i));
+  });
+  vis(foot, t >= T_FOOT);
+
+  /* counter ticks up on every completed trade */
+  const done = TRADES.filter((_, i) => t >= getT(i)).length;
+  counter.textContent = String(1 + done * 8).padStart(3, '0');
+
+  const hits = [T_L2, ...rows.map((_, i) => getT(i)), T_FOOT];
+  punch.style.transform = `scale(${1 + impulse(t, hits, 0.22) * 0.045})`;
+}, LOOP);
+</script>
+</body>
+</html>

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@remotion/fonts": "^4.0.410",
+    "@remotion/media": "4.0.489",
     "@remotion/media-utils": "^4.0.410",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
