@@ -3,7 +3,7 @@ import { IN_SCOPE, OUT_OF_SCOPE } from '../data/content.ts';
 
 export default function Rules() {
   return (
-    <section id="rules" className="sect rules" data-signal="rules">
+    <section id="rules" className="sect rules">
       <SectionHead no="03" title="Rules of engagement" tag="// real · original · unpaid" />
       <div className="rules-grid corners rv">
         <article className="rule-column rule-yes">

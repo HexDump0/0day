@@ -18,7 +18,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero" id="hero" data-signal="hero" ref={heroRef}>
+    <section className="hero" id="hero" ref={heroRef}>
       <canvas id="fx" aria-hidden="true" ref={canvasRef}></canvas>
       <div className="hero-copy">
         <h1 className="shout">

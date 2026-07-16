@@ -105,19 +105,6 @@
 
 /* ============ components: the bespoke 0day design ============ */
 @layer components {
-  /* The second visual layer: a restrained field of live glyphs behind the
-     document. Section copy stays above it; pointer input passes through. */
-  .signal-field {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-    opacity: .88;
-  }
-
   /* ---- header ---- */
   .top {
     display: flex;

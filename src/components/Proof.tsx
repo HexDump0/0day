@@ -23,7 +23,7 @@ export default function Proof() {
   };
 
   return (
-    <section id="proof" className="sect proof" data-signal="proof">
+    <section id="proof" className="sect proof">
       <SectionHead no="02" title="Proof of work" tag="// one required file" />
       <div className="proof-intro rv">
         <p>Track the hours however the work happened.</p>

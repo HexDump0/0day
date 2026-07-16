@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import Header from './components/Header.tsx';
-import SignalField from './components/SignalField.tsx';
 import Hero from './components/Hero.tsx';
 import Ticker from './components/Ticker.tsx';
 import Brief from './components/Brief.tsx';
@@ -33,7 +32,6 @@ export default function App() {
 
   return (
     <>
-      <SignalField />
       <Header />
       <main id="top">
         <Hero />

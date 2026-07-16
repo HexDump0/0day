@@ -3,7 +3,7 @@ import { FAQS } from '../data/content.ts';
 
 export default function Faq() {
   return (
-    <section id="faq" className="sect" data-signal="faq">
+    <section id="faq" className="sect">
       <SectionHead no="05" title="FAQ" tag="// before you ask" />
       <div className="faq corners rv-stagger">
         {FAQS.map((item) => (

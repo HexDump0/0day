@@ -4,7 +4,7 @@ import { PROGRAM_FACTS } from '../data/content.ts';
 
 export default function Brief() {
   return (
-    <section id="brief" className="sect brief" data-signal="brief">
+    <section id="brief" className="sect brief">
       <SectionHead no="01" title="What is this?" tag="// the whole program" />
       <div className="brief-statement rv">
         <p className="brief-command">

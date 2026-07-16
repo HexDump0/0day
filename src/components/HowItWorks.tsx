@@ -3,7 +3,7 @@ import { STEPS } from '../data/content.ts';
 
 export default function HowItWorks() {
   return (
-    <section id="how" className="sect" data-signal="how">
+    <section id="how" className="sect">
       <SectionHead no="04" title="How it works" tag="// you ship → we ship" />
       <ol className="process-loop rv">
         {STEPS.map((step) => (
