@@ -1,0 +1,8 @@
+node_modules
+dist
+vid
+.git
+.claude
+*.tsbuildinfo
+models/*.glb
+models/*.stl
