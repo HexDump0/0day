@@ -102,6 +102,7 @@ export const DIRECTIONS: Direction[] = [
 ];
 
 export interface HourMethod {
+  id: 'hackatime' | 'lapse' | 'self';
   no: string;
   title: string;
   covers: string;
@@ -110,18 +111,21 @@ export interface HourMethod {
 
 export const HOUR_METHODS: HourMethod[] = [
   {
+    id: 'hackatime',
     no: 'A',
     title: 'Hackatime',
     covers: 'Code written in a tracked editor.',
     proof: 'Link the project.',
   },
   {
+    id: 'lapse',
     no: 'B',
     title: 'Lapse',
     covers: 'Ghidra, Wireshark, Burp, VMs, hardware, and other tool-driven work.',
     proof: 'Submit the timelapse.',
   },
   {
+    id: 'self',
     no: 'C',
     title: 'Self-declare',
     covers: 'Research, thinking, documentation, and responsible disclosure.',
@@ -157,23 +161,23 @@ export interface Step {
 export const STEPS: Step[] = [
   {
     no: '01',
-    title: 'Do something real',
-    body: 'Build a tool, find a real vuln, or take software apart. Original work only — CTF flags and paid bounties don’t count.',
+    title: 'Make',
+    body: 'Build, break, or reverse something real.',
   },
   {
     no: '02',
-    title: 'Log your hours',
-    body: 'Link your Hackatime project, record with Lapse, or self-declare. Use whichever methods fit your work.',
+    title: 'Track',
+    body: 'Use Hackatime, Lapse, self-declare, or combine them.',
   },
   {
     no: '03',
-    title: 'Write it up',
-    body: 'Your writeup is your proof. At review, your hours are checked against it — make it justify your time.',
+    title: 'Prove',
+    body: 'Write up the process and evidence.',
   },
   {
     no: '04',
-    title: 'We ship you back',
-    body: 'Approved hours become a balance; the balance becomes hacker gear. Ship again, earn again.',
+    title: 'Get gear',
+    body: 'Approved hours become your balance.',
   },
 ];
 

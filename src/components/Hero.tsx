@@ -18,7 +18,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero" id="hero" ref={heroRef}>
+    <section className="hero" id="hero" data-signal="hero" ref={heroRef}>
       <canvas id="fx" aria-hidden="true" ref={canvasRef}></canvas>
       <div className="hero-copy">
         <h1 className="shout">
@@ -36,7 +36,9 @@ export default function Hero() {
       </div>
 
       <div className="hero-foot">
-        <a className="scroll-cue" href="#program">
+        <a className="scroll-cue" href="#brief">
+          <span className="cue-line" aria-hidden="true"></span>
+          <span>Open the brief</span>
         </a>
         <div className="statline" aria-label="program status">
           <span>hw: <b id="hwname">loading&hellip;</b></span>
