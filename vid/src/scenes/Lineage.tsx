@@ -74,7 +74,9 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
   const labelLeft = idx % 2 === 0;
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+      <AbsoluteFill
+        style={{justifyContent: 'center', alignItems: 'center', translate: '0 -70px'}}
+      >
         <div
           style={{
             width: 1320, height: 700, overflow: 'hidden',
@@ -96,7 +98,7 @@ const Flagship: React.FC<{t: number}> = ({t}) => {
       </AbsoluteFill>
       <div
         style={{
-          position: 'absolute', bottom: 140,
+          position: 'absolute', bottom: 105,
           ...(labelLeft ? {left: 80} : {right: 80, textAlign: 'right' as const}),
         }}
       >
