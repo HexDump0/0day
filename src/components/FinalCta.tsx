@@ -4,9 +4,10 @@ export default function FinalCta() {
   return (
     <section className="final rv">
       <p className="eyebrow">// end of transmission</p>
-      <h2>Everything you've built<br />can be broken.<br /><span className="hl">Find out how.</span></h2>
+      <h2>Find the question.<br />Do the work.<br /><span className="hl">Ship the evidence.</span></h2>
+      <p className="final-sub">Build something useful, find something real, or explain something hidden.</p>
       <a className="btn btn-solid" href={APPLY_URL} target="_blank" rel="noreferrer">
-        <span className="btn-arrow">&gt;</span> Apply now
+        <span className="btn-arrow">&gt;</span> Enter 0day
       </a>
     </section>
   );
