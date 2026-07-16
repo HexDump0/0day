@@ -7,12 +7,12 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {ACID, BG, DIM, DOTO_HEAVY, FG, HAIR, INK, MONO} from '../theme';
 import {beatsIn, CHORUS_HITS, PERIOD, T_DROP, T_OUTRO} from '../lib/timeline';
 import {DROP_SCHEDULE} from '../lib/cuts';
-import {GlitchText, Punch, SpecRow} from '../components/fx';
+import {GlitchText, Punch} from '../components/fx';
 
 const TICKER =
   'you ship → we ship // while(you.ship()) { we.ship(); } // everything connected can be broken // ' +
-  '0 days of experience required // nmap your potential // somewhere, a flipper zero has your name on it // ' +
-  'reviewed by humans // 404: excuses not found // disclose responsibly // ' +
+  'nmap your potential // somewhere, a flipper zero has your name on it // ' +
+  'reviewed by humans // disclose responsibly // ' +
   'no certifications, no gatekeeping // 18 & under, worldwide // ';
 
 const Ticker: React.FC<{t: number; ink?: boolean}> = ({t, ink}) => (
@@ -115,7 +115,7 @@ export const Drop: React.FC = () => {
           in security.
         </div>
         <div style={{fontFamily: MONO, fontSize: 40, color: DIM, marginTop: 40}}>
-          write it up. ship it. that is the whole spec.
+          write it up. ship it. and get hacker gear.
         </div>
       </AbsoluteFill>
     );
@@ -123,7 +123,7 @@ export const Drop: React.FC = () => {
     view = (
       <AbsoluteFill style={{justifyContent: 'center', padding: '0 200px'}}>
         <div style={{fontFamily: MONO, fontSize: 26, letterSpacing: '.18em', color: DIM, marginBottom: 30}}>
-          DIRECTION {item.no} / 03
+          {item.no} / 03
         </div>
         <div style={{...DOTO_HEAVY, fontSize: 220, lineHeight: 0.9, color: FG}}>
           {item.title}
@@ -140,24 +140,19 @@ export const Drop: React.FC = () => {
           …OR <span style={{color: ACID}}>YOUR</span> OWN IDEA
         </div>
         <div style={{fontFamily: MONO, fontSize: 40, color: DIM, marginTop: 40}}>
-          coordinates, not tracks.
+          go wild!
         </div>
       </AbsoluteFill>
     );
   } else {
-    // loot: the payoff — manifest rows land one per half-beat
+    // loot: the payoff — one static card, same grammar as the other claims
     view = (
-      <AbsoluteFill style={{justifyContent: 'center', padding: '0 200px'}}>
-        <div style={{...DOTO_HEAVY, fontSize: 120, color: FG, marginBottom: 40}}>
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 160px'}}>
+        <div style={{...DOTO_HEAVY, fontSize: 120, color: FG, textAlign: 'center', lineHeight: 1.1}}>
           HOURS <span style={{fontFamily: MONO, color: ACID}}>→</span> GEAR
         </div>
-        <div style={{width: 1100}}>
-          {item.body!.map((b, i) => {
-            const show = local >= (i + 1) * PERIOD * 0.5;
-            return show ? (
-              <SpecRow key={b} label={`0${i + 1}`} value={b} acid={i === 0} />
-            ) : null;
-          })}
+        <div style={{fontFamily: MONO, fontSize: 40, color: DIM, marginTop: 40}}>
+          {item.body!.join(' · ')}
         </div>
       </AbsoluteFill>
     );

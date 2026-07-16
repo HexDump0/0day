@@ -2,7 +2,7 @@
    across the page, so the site cannot quietly contradict itself section to
    section. */
 
-export const APPLY_URL = 'https://hackclub.com/slack';
+export const APPLY_URL = "https://rsvp.hackclub.community/0day";
 
 export interface NavLink {
   href: string;

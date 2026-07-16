@@ -46,11 +46,10 @@ EXTENDED_ENDS = {
 }
 
 # Lines whose sung attack starts before the LRC time by more than PRE_ROLL:
-# LRC time -> extra pre-roll seconds. The first chorus line is really
-# "So drink all the booze" — the "So" pickup sits ~0.4s ahead of the beat.
-EARLY_STARTS = {
-    54.25: 0.4,
-}
+# LRC time -> extra pre-roll seconds. (Empty: an early-open of the first
+# chorus line's "So" pickup was tried 2026-07-16 and reverted — the vocal
+# should enter at the drop, not before it.)
+EARLY_STARTS: dict[float, float] = {}
 
 LRC_RE = re.compile(r"\[(\d+):(\d+(?:\.\d+)?)\](.*)")
 

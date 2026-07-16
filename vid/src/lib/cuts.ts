@@ -162,7 +162,7 @@ export const DROP_SCHEDULE: Claim[] = [
   {time: beatTime(DROP_BEAT + 20), kind: 'thesis', title: '…or your own idea'},
   {time: CHORUS_HITS[4], kind: 'lyric', title: 'HACK ALL THE THINGS'},
   {time: beatTime(DROP_BEAT + 24), kind: 'loot', title: 'hours → gear',
-    body: ['flipper zero', 'hackrf one', 'cyberdeck', 'raspberry pi']},
+    body: ['flipper zero', 'hackrf', 'raspberry pi']},
   {time: CHORUS_HITS[5], kind: 'lyric', title: 'HACK ALL THE THINGS'},
 ];
 

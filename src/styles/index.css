@@ -54,11 +54,6 @@
   from { opacity: 0; translate: 0 12px; }
   to { opacity: 1; translate: 0 0; }
 }
-@keyframes data-scan {
-  from { translate: 0 -120%; }
-  to { translate: 0 520%; }
-}
-
 /* ============ base: resets + document-level styling ============ */
 @layer base {
   :root {
@@ -801,19 +796,6 @@
     mask-image: linear-gradient(to bottom, #000, transparent 75%);
   }
 
-  .direction-panel::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 90px;
-    background: linear-gradient(transparent, color-mix(in srgb, var(--acid) 8%, transparent), transparent);
-    opacity: .5;
-    animation: data-scan 7s linear infinite;
-    pointer-events: none;
-  }
-
   .direction-panel > * { position: relative; z-index: 1; }
 
   .direction-panel header {
@@ -1383,7 +1365,6 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(118px, .5fr);
     list-style: none;
-    border-block: 1px solid var(--fg);
     background: color-mix(in srgb, var(--bg) 86%, transparent);
     backdrop-filter: blur(5px);
   }
@@ -1747,6 +1728,5 @@
     .direction-panel,
     .locker-data,
     .faq details[open] p { animation: none; }
-    .direction-panel::after { animation: none; display: none; }
   }
 }

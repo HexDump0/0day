@@ -29,7 +29,7 @@ export default function Hero() {
           Do anything cybersec: build a tool, find vulns, reverse engineer malware. Write up your work, ship it, and get hacker gear.
         </p>
         <div className="hero-ctas">
-          <a className="btn" href="https://hackclub.com/slack" target="_blank" rel="noreferrer">
+          <a className="btn" href="https://rsvp.hackclub.community/0day" target="_blank" rel="noreferrer">
             <span className="btn-arrow">&gt;</span> RSVP
           </a>
         </div>
@@ -37,8 +37,6 @@ export default function Hero() {
 
       <div className="hero-foot">
         <a className="scroll-cue" href="#brief">
-          <span className="cue-line" aria-hidden="true"></span>
-          <span>Open the brief</span>
         </a>
         <div className="statline" aria-label="program status">
           <span>hw: <b id="hwname">loading&hellip;</b></span>

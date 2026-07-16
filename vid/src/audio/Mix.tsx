@@ -114,9 +114,7 @@ const vocalsVolume = (f: number): number => {
 
 const vocalsVolumeB = (f: number): number => {
   const t = T_TAPE_STOP + f / FPS; // video time
-  // stay dead through the gap, but let the chorus pickup ("So drink...")
-  // breathe in under the riser tail — its gate opens ~0.6s before the drop
-  if (t < T_DROP - 0.7) return 0;
+  if (t < T_DROP) return 0;
   const song = t + GAP_SKIP; // lyric gates live in song time
   let g = 0;
   for (const l of VOCAL_LINES) {

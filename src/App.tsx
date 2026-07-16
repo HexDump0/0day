@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import Header from './components/Header.tsx';
 import Hero from './components/Hero.tsx';
-import Ticker from './components/Ticker.tsx';
 import Brief from './components/Brief.tsx';
 import Proof from './components/Proof.tsx';
 import Rules from './components/Rules.tsx';
@@ -35,7 +34,6 @@ export default function App() {
       <Header />
       <main id="top">
         <Hero />
-        <Ticker />
         <Brief />
         <HowItWorks />
         <Proof />

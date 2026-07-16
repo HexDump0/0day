@@ -63,7 +63,7 @@ export const Outro: React.FC = () => {
         you ship. we ship.
       </div>
       <div style={{fontFamily: MONO, fontSize: 34, color: DIM, marginTop: 50}}>
-        0day.hackclub.com{' '}
+        0day.hexdump0.pw{' '}
         <span style={{color: ACID, opacity: blink ? 1 : 0}}>▮</span>
       </div>
     </AbsoluteFill>
