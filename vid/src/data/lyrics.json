@@ -158,7 +158,7 @@
   "end": 55.56,
   "gateStart": 54.07,
   "text": "Drink all the booze",
-  "allowed": true
+  "allowed": false
  },
  {
   "time": 55.56,
